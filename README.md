@@ -19,7 +19,7 @@ HashingEx/
  - [HashingEx](https://github.com/phi-el/HashingEx)
  - [RPC-Communication](https://github.com/phi-el/rpc-communication-net2)
  - [SerializationDotNet2](https://github.com/phi-el/SerializiationDotNet2)
-  
+ - [IoHelper](https://github.com/phi-el/IoHelper)
  
 Example folder structure:
 
