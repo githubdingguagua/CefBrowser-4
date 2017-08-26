@@ -215,7 +215,7 @@
     <Resource Include="earth.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Encoding\Encoding\EncodingEx.csproj">
+    <ProjectReference Include="..\..\EncodingEx\EncodingEx\EncodingEx.csproj">
       <Project>{7e877ce7-2da5-458e-94b2-408ccd541d76}</Project>
       <Name>EncodingEx</Name>
     </ProjectReference>
@@ -223,7 +223,7 @@
       <Project>{f4db5312-74fd-4293-b404-0dc063258825}</Project>
       <Name>ExceptionHandling</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Hashing\Hashing\HashingEx.csproj">
+    <ProjectReference Include="..\..\HashingEx\HashingEx\HashingEx.csproj">
       <Project>{e469a741-a8e2-4f8c-8af6-a10fda8d3a5b}</Project>
       <Name>HashingEx</Name>
     </ProjectReference>
