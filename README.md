@@ -1,4 +1,19 @@
-# CefBrowser
+# CefBrowser (docs are outdated!)
+## Howto Use:
+ - Clone
+ - Recover the NUGET packages
+ - Clone ExceptionHandling, Encoding & HashingEx (so that CefBrowser, ExceptionHandling, Encoding & HashingEx are in the same folder; vs studio integration purposes, do not change that) 
+ 
+Example folder structure:
+```
+./
+../
+CefBrowser/
+EncodingEx/
+ExceptionHandling/
+HashingEx/
+```
+
 ## Technical
  - Running on CEF# 57.0.0
  - Running on Chromium 3.2987.1601
