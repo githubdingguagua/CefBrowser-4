@@ -2,10 +2,9 @@
 ## Howto Use:
  - Clone
  - Recover the NUGET packages
- - Clone ExceptionHandling, Encoding & HashingEx (so that CefBrowser, ExceptionHandling, Encoding & HashingEx are in the same folder; vs studio integration purposes, do not change that) 
- 
-Example folder structure:
-```
+ - Clone dependencies(so that CefBrowser, ExceptionHandling, Encoding & HashingEx are in the same folder; vs studio integration purposes, do not change that) 
+ e.g.:
+ ```
 ./
 ../
 CefBrowser/
@@ -13,6 +12,17 @@ EncodingEx/
 ExceptionHandling/
 HashingEx/
 ```
+
+## Dependencies
+ - ExceptionHandling
+ - EncodingEx
+ - HashingEx
+ - RPC-Communication
+ - SerializationDotNet2
+  
+ 
+Example folder structure:
+
 
 ## Technical
  - Running on CEF# 57.0.0
