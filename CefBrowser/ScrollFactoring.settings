@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassAttributeNamespace="CefBrowser" GeneratedClassAttributeName="ScrollFactoring">
+  <Profiles />
+  <Settings>
+    <Setting AttributeName="lastWidth" ChildType="System.Int32" Scope="Application">
+      <ExpectedValue Profile="(Default)">0</ExpectedValue>
+    </Setting>
+    <Setting AttributeName="lastHeight" ChildType="System.Int32" Scope="Application">
+      <ExpectedValue Profile="(Default)">0</ExpectedValue>
+    </Setting>
+    <Setting AttributeName="xFactor" ChildType="System.Double" Scope="Application">
+      <ExpectedValue Profile="(Default)">0</ExpectedValue>
+    </Setting>
+    <Setting AttributeName="yFactor" ChildType="System.Double" Scope="Application">
+      <ExpectedValue Profile="(Default)">0</ExpectedValue>
+    </Setting>
+  </Settings>
+</SettingsFile>

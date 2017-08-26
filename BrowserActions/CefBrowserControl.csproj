@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{68D05500-B890-4FB4-B856-64B91A9A2B4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CefBrowserControl</RootNamespace>
+    <AssemblyName>CefBrowserControl</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSharpTest.Net.RpcLibrary, Version=14.327.1832.1051, Culture=neutral, PublicKeyToken=06aee00cce822474, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\rpc-communication-net2\packages\CSharpTest.Net.RpcLibrary.14.327.1832.1051\lib\net20\CSharpTest.Net.RpcLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="KeePass, Version=2.36.0.32045, Culture=neutral, PublicKeyToken=7952fc8ece49a093, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Build\KeePass-2.36\KeePass.exe</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseObject.cs" />
+    <Compile Include="BrowserAction.cs" />
+    <Compile Include="BrowserActions\Elements\ElementToClickOn.cs" />
+    <Compile Include="BrowserActions\Elements\ElementToLoad.cs" />
+    <Compile Include="BrowserActions\Elements\EventToTrigger.cs" />
+    <Compile Include="BrowserActions\Elements\EventTypes\InvokeMouseClick.cs" />
+    <Compile Include="BrowserActions\Elements\FrameLoaded.cs" />
+    <Compile Include="BrowserActions\Elements\GetAttribute.cs" />
+    <Compile Include="BrowserActions\Elements\GetFrameNames.cs" />
+    <Compile Include="BrowserActions\Elements\GetHttpAuth.cs" />
+    <Compile Include="BrowserActions\Elements\GetImage.cs" />
+    <Compile Include="BrowserActions\Elements\GetJsPrompt.cs" />
+    <Compile Include="BrowserActions\Elements\GetStyle.cs" />
+    <Compile Include="BrowserActions\Elements\HasAttributeSetTo.cs" />
+    <Compile Include="BrowserActions\Elements\HasStyleSetTo.cs" />
+    <Compile Include="BrowserActions\Elements\InvokeSubmit.cs" />
+    <Compile Include="BrowserActions\Elements\JavascriptToExecute.cs" />
+    <Compile Include="BrowserActions\Elements\ResourceToLoad.cs" />
+    <Compile Include="BrowserActions\Elements\ReturnNode.cs" />
+    <Compile Include="BrowserActions\Elements\SecondsToWait.cs" />
+    <Compile Include="BrowserActions\Elements\SetAttribute.cs" />
+    <Compile Include="BrowserActions\Elements\SetHttpAuth.cs" />
+    <Compile Include="BrowserActions\Elements\SetJsPrompt.cs" />
+    <Compile Include="BrowserActions\Elements\SetStyle.cs" />
+    <Compile Include="BrowserActions\Elements\SiteLoaded.cs" />
+    <Compile Include="BrowserActions\Elements\TextToTypeIn.cs" />
+    <Compile Include="BrowserActions\Helper\FrameDetails.cs" />
+    <Compile Include="BrowserActions\Helper\ObjectLocation.cs" />
+    <Compile Include="BrowserActions\Helper\Rectangle.cs" />
+    <Compile Include="BrowserActions\Helper\StringOrRegex.cs" />
+    <Compile Include="BrowserCommand.cs" />
+    <Compile Include="BrowserCommands\GetInputFromUser.cs" />
+    <Compile Include="BrowserCommands\LoadUrl.cs" />
+    <Compile Include="BrowserCommands\Quit.cs" />
+    <Compile Include="BrowserCommands\Open.cs" />
+    <Compile Include="BrowserCommands\SwitchUserInputEnabling.cs" />
+    <Compile Include="BrowserCommands\SwitchWindowVisibility.cs" />
+    <Compile Include="Conversion\CefDecoding.cs" />
+    <Compile Include="Conversion\CefEncoding.cs" />
+    <Compile Include="InputParameters.cs" />
+    <Compile Include="KeyValuePairEx.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\InsecureBool.cs" />
+    <Compile Include="Resources\InsecureDialogType.cs" />
+    <Compile Include="Resources\InsecureHttpAuthSchemaType.cs" />
+    <Compile Include="Resources\InsecureImage.cs" />
+    <Compile Include="Resources\InsecureInt.cs" />
+    <Compile Include="Resources\Resource.cs" />
+    <Compile Include="Resources\InsecureText.cs" />
+    <Compile Include="Resources\Text.cs" />
+    <Compile Include="RpcReaderWriter.cs" />
+    <Compile Include="SerializeContainer.cs" />
+    <Compile Include="Timeout.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Encoding\Encoding\EncodingEx.csproj">
+      <Project>{7e877ce7-2da5-458e-94b2-408ccd541d76}</Project>
+      <Name>EncodingEx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExceptionHandling\Handling\ExceptionHandling.csproj">
+      <Project>{f4db5312-74fd-4293-b404-0dc063258825}</Project>
+      <Name>ExceptionHandling</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hashing\Hashing\HashingEx.csproj">
+      <Project>{e469a741-a8e2-4f8c-8af6-a10fda8d3a5b}</Project>
+      <Name>HashingEx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\rpc-communication-net2\RPC-Communication\RPC-Communication.csproj">
+      <Project>{c07dc298-12ce-40c0-8d5d-63b6fda175a6}</Project>
+      <Name>RPC-Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SerializiationDotNet2\SerializiationDotNet2\SerializationDotNet2.csproj">
+      <Project>{339f6da4-cf0b-4bf0-a5e0-268b34b3d17f}</Project>
+      <Name>SerializationDotNet2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE_CefBrowserControl.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>rmdir $(TargetDir) /S /Q</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
