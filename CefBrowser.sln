@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingEx", "..\HashingEx\H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPC-Communication", "..\rpc-communication-net2\RPC-Communication\RPC-Communication.csproj", "{C07DC298-12CE-40C0-8D5D-63B6FDA175A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializationDotNet2", "..\SerializiationDotNet2\SerializiationDotNet2\SerializationDotNet2.csproj", "{339F6DA4-CF0B-4BF0-A5E0-268B34B3D17F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializationDotNet2", "..\SerializationDotNet2\SerializiationDotNet2\SerializationDotNet2.csproj", "{339F6DA4-CF0B-4BF0-A5E0-268B34B3D17F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

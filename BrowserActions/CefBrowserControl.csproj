@@ -135,10 +135,6 @@
       <Project>{c07dc298-12ce-40c0-8d5d-63b6fda175a6}</Project>
       <Name>RPC-Communication</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SerializiationDotNet2\SerializiationDotNet2\SerializationDotNet2.csproj">
-      <Project>{339f6da4-cf0b-4bf0-a5e0-268b34b3d17f}</Project>
-      <Name>SerializationDotNet2</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE_CefBrowserControl.txt">
