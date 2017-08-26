@@ -51,14 +51,11 @@
   <ItemGroup>
     <Reference Include="CSharpTest.Net.RpcLibrary, Version=14.327.1832.1051, Culture=neutral, PublicKeyToken=06aee00cce822474, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\rpc-communication-net2\packages\CSharpTest.Net.RpcLibrary.14.327.1832.1051\lib\net20\CSharpTest.Net.RpcLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="KeePass, Version=2.36.0.32045, Culture=neutral, PublicKeyToken=7952fc8ece49a093, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Build\KeePass-2.36\KeePass.exe</HintPath>
+      <HintPath>..\..\..\..\password-management-utility\Development\password-management-utility\packages\CSharpTest.Net.RpcLibrary.14.327.1832.1051\lib\net20\CSharpTest.Net.RpcLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.XML" />
   </ItemGroup>
@@ -113,7 +110,6 @@
     <Compile Include="Resources\InsecureInt.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\InsecureText.cs" />
-    <Compile Include="Resources\Text.cs" />
     <Compile Include="RpcReaderWriter.cs" />
     <Compile Include="SerializeContainer.cs" />
     <Compile Include="Timeout.cs" />
@@ -134,6 +130,10 @@
     <ProjectReference Include="..\..\rpc-communication-net2\RPC-Communication\RPC-Communication.csproj">
       <Project>{c07dc298-12ce-40c0-8d5d-63b6fda175a6}</Project>
       <Name>RPC-Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Serialization\SerializiationDotNet2\SerializationDotNet2.csproj">
+      <Project>{339f6da4-cf0b-4bf0-a5e0-268b34b3d17f}</Project>
+      <Name>SerializationDotNet2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

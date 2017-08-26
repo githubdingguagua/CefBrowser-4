@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml.Serialization;
 using CefBrowserControl.BrowserActions.Helper;
 using CefBrowserControl.Resources;
-using KeePassLib.Security;
 
 namespace CefBrowserControl.BrowserActions.Elements
 {

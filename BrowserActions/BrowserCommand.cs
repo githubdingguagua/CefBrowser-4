@@ -2,7 +2,6 @@
 using System.Xml.Serialization;
 using CefBrowserControl.BrowserCommands;
 using CefBrowserControl.Resources;
-using KeePassLib.Security;
 
 namespace CefBrowserControl
 {

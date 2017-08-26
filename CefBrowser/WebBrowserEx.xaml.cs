@@ -499,7 +499,7 @@ namespace CefBrowser
 
             };
             _browsingState.FrameLoadingStates.Add(state);
-            Browser.ZoomLevel = 1;
+            //Browser.ZoomLevel = 1;
 
         }
 

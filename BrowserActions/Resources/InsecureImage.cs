@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using KeePassLib.Security;
 
 namespace CefBrowserControl.Resources
 {

@@ -5,7 +5,6 @@ using CefBrowserControl.BrowserActions.Elements;
 using CefBrowserControl.BrowserActions.Elements.EventTypes;
 using CefBrowserControl.BrowserActions.Helper;
 using CefBrowserControl.Resources;
-using KeePassLib.Security;
 
 namespace CefBrowserControl
 {
