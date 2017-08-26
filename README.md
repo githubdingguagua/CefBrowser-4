@@ -14,11 +14,11 @@ HashingEx/
 ```
 
 ## Dependencies
- - ExceptionHandling
- - EncodingEx
- - HashingEx
- - RPC-Communication
- - SerializationDotNet2
+ - [ExceptionHandling](https://github.com/phi-el/ExceptionHandling)
+ - [EncodingEx](https://github.com/phi-el/EncodingEx)
+ - [HashingEx](https://github.com/phi-el/HashingEx)
+ - [RPC-Communication](https://github.com/phi-el/rpc-communication-net2)
+ - [SerializationDotNet2](https://github.com/phi-el/SerializiationDotNet2)
   
  
 Example folder structure:
