@@ -130,7 +130,7 @@ namespace CefBrowserControl
             Failed,
         }
 
-        public TimeSpan? Timeout { get; set; } = Options.DefaultCefBrowserActionOrCommandTimeoutMsec;
+        public TimeSpan? Timeout { get; set; } = null;
 
         public int? TimeoutInSec = null;
 
