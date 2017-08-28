@@ -56,6 +56,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Returns the full Node of an element in xml serialized format";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

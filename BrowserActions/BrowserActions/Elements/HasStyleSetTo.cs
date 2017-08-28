@@ -33,6 +33,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                  "Checks if one or more elements have set the css style to a specified value. Action = true if case becomes true. attributename is CSS Style AttributeName!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

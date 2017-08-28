@@ -36,6 +36,7 @@ namespace CefBrowserControl.BrowserCommands
             };
             Description =
                 "Let the user enable to use the mouse and keyboard in the browser";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

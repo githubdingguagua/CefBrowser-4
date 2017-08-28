@@ -32,6 +32,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 "ValueToSet",
             };
             Description = "Sets an css attribute value of one or more elements. AttributeName = Css Style Name!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

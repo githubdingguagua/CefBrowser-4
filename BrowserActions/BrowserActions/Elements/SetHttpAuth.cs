@@ -45,6 +45,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser to cancel an http auth or set username and password for it. This has to be done BEFORE the auth, otherwise it gets cancelled!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

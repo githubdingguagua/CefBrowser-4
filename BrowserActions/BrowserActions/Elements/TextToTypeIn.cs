@@ -37,6 +37,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser to simulate the text typing for the specified element. DO NOT USE, THIS IS NOT IMPLEMENTED!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

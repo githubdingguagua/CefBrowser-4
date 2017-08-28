@@ -47,6 +47,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser to check if a resource has been loaded and wait for it. POSSIBLE DEADLOCK AHEAD!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

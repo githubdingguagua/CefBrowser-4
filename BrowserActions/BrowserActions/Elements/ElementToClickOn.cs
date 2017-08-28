@@ -33,6 +33,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             {
                 "Selector",
             };
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

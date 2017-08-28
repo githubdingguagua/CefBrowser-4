@@ -34,6 +34,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Gets all the framenames from the browser.";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

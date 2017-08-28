@@ -74,32 +74,15 @@ namespace CefBrowser.Handler
             Confirm: https://www.w3schools.com/js/tryit.asp?filename=tryjs_confirm
             Alert: https://www.w3schools.com/js/tryit.asp?filename=tryjs_alert
             */
-         
-            return true;
-            switch (dialogType)
-            {
-                    case CefJsDialogType.Alert:
-                    HandledJsDialogs.Add(new JsDialog()
-                    {
-                        DefaultPromptText = defaultPromptText,
-                        DialogType = dialogType,
-                        MessageText = messageText,
-                        OriginUrl =  originUrl,
-                        Callback = callback
-                    });
-                    break;
-                default:
-                    throw new NotImplementedException();
-                    break;
-            }
-            return false;
         }
 
         public bool OnJSBeforeUnload(IWebBrowser browserControl, IBrowser browser, string message, bool isReload,
             IJsDialogCallback callback)
         {
-
-            return false;
+            //surpressing Is it OK to leave/reload this page?
+            if (!callback.IsDisposed)
+                callback.Continue(true);
+            return true;
         }
 
         public void OnResetDialogState(IWebBrowser browserControl, IBrowser browser)

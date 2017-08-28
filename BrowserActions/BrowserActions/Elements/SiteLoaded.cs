@@ -45,6 +45,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Lets the browser wait until the specified url has loaded. POSSIBLE DEADLOCK AHEAD!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

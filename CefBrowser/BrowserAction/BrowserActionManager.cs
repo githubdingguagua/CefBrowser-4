@@ -65,6 +65,12 @@ namespace CefBrowser.BrowserAction
             ExecutingActions = false;
         }
 
+        private static string EscapeJavascript(string script)
+        {
+            string sanitized = script.Replace(@"\", @"\\").Replace(@"'", @"\'");
+            return sanitized;
+        }
+
         public void AddBrowserActions(object browserAction)
         {
             _actionListLockSlim.EnterWriteLock();
@@ -846,8 +852,13 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                     new KeyValuePairEx<string, string>(
                                                         JavascriptToExecute.KeyList.ExecutionResult.ToString(),
                                                         evaluateJavascript.Response.Result.ToString()));
+                                                element.ReturnedOutput.Add(
+                                                    new KeyValuePairEx<string, string>(
+                                                        JavascriptToExecute.KeyList.ExecutedJavascript.ToString(),
+                                                        script));
                                                 element.Successful = evaluateJavascript.Response.Success;
                                                 element.Completed = true;
+                                                element.ExecutedJavascript = script;
                                             }
                                             else
                                             {
@@ -862,8 +873,14 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                     new KeyValuePairEx<string, string>(
                                                         JavascriptToExecute.KeyList.ExecutionResult.ToString(),
                                                         evaluateJavascript.Response.Result.ToString()));
+                                                newElement.ReturnedOutput.Add(
+                                                   new KeyValuePairEx<string, string>(
+                                                       JavascriptToExecute.KeyList.ExecutedJavascript.ToString(),
+                                                       script));
                                                 newElement.Successful = evaluateJavascript.Response.Success;
                                                 newElement.Completed = true;
+                                                newElement.ExecutedJavascript = script;
+
                                                 element.SetNextJavascriptToExecute(newElement);
                                             }
                                             var text = script + Environment.NewLine + Environment.NewLine +
@@ -985,7 +1002,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                             action.TranslatePlaceholderStringToSingleString(element.AttributeName.Value));
                                     element.ValueToSet = new InsecureText(
                                         action.TranslatePlaceholderStringToSingleString(element.ValueToSet.Value));
-                                    element.ValueToSet.Value = element.ValueToSet.Value.Replace(@"\", @"\\").Replace(@"'", @"\'");
+                                    element.ValueToSet.Value = EscapeJavascript(element.ValueToSet.Value);
                                     if (ShouldBreakDueToTimeout(element))
                                     {
                                         brokeTimeout = true;
@@ -1787,9 +1804,10 @@ context.fill();
                     {
                         iterator += "result.iterateNext(); ";
                     }
-                    return
-                        $"(function(){{var result = document.evaluate(\"{selectionString}\", document, null, XPathResult.ANY_TYPE, null ); " +
+                    string script = $"(function(){{var result = document.evaluate('{EscapeJavascript(selectionString)}', document, null, XPathResult.ANY_TYPE, null ); " +
                         iterator + "return result.iterateNext();})()";
+                    return script;
+
                 }
             }
             throw new NoSelectionTypeSpecified("Please define a selection type");

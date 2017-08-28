@@ -32,6 +32,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Gets the style of an element. The AttributeName will be the css property!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

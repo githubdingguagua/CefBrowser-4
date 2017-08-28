@@ -37,6 +37,7 @@ namespace CefBrowserControl.BrowserCommands
             };
             Description =
                 "Instructs the browser to load the specified url";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

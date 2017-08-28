@@ -32,6 +32,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser to wait until one or more frames are loaded completely. POSSIBLE DEADLOCK AHED!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

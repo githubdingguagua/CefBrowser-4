@@ -39,6 +39,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                "Instructs the browser react for an specific js prompt. This has to be done BEFORE the auth, otherwise it gets cancelled!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

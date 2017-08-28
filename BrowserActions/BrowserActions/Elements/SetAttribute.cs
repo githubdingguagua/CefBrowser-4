@@ -38,6 +38,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser set the attribute value of the one or more elements.";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

@@ -43,6 +43,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Extracts an image from the DOM in base64 format. POSSIBLE DEADLOCK AHED when the selector fails and no image was found!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

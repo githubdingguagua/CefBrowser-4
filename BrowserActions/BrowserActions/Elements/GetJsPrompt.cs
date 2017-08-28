@@ -57,6 +57,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Gets an normally showed js prompt. Note that the prompt has to be set first, or the browser will ignore it! POSSIBLE DEADLOCK AHED when no prompt has shown, because Browser will wait for it!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

@@ -43,6 +43,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser to wait until one or many elements are available in the DOM. POSSIBLE DEADLOCK AHED!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

@@ -11,6 +11,7 @@ namespace CefBrowserControl.BrowserActions.Elements
     {
         public Selector Selector = new Selector();
         public InsecureText Javascript = new InsecureText();
+        public string ExecutedJavascript;
 
         public JavascriptToExecute NextJavascriptToExecute { get; set; }
 
@@ -24,6 +25,7 @@ namespace CefBrowserControl.BrowserActions.Elements
         public enum KeyList
         {
             ExecutionResult,
+            ExecutedJavascript,
         }
 
         public JavascriptToExecute()
@@ -38,6 +40,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             else
                 return;
             ReturnedOutputKeysList.Add(KeyList.ExecutionResult.ToString());
+            ReturnedOutputKeysList.Add(KeyList.ExecutedJavascript.ToString());
 
             InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
             {
@@ -51,6 +54,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Executes Javascript. If Selector is set, the javascript is tried to be executed on it";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

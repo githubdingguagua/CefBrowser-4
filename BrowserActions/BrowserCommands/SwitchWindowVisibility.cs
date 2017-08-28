@@ -36,6 +36,7 @@ namespace CefBrowserControl.BrowserCommands
             };
             Description =
                 "Shows or hides the browser for the user";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

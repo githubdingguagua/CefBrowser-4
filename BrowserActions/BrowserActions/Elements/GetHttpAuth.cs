@@ -61,6 +61,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Gets the http auth infos of an elapsed authentication. SetHttpAuth has to be set before, or browser will loop!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

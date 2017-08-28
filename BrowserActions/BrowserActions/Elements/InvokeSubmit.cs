@@ -30,6 +30,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                "Invokes submit event on the selector";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

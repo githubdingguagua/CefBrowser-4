@@ -40,6 +40,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Checks if one or more elements have set the value to the specified expected value. If that is the case, this object will set successfull to true!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()

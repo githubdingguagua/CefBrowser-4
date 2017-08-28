@@ -46,6 +46,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Invoke Events from https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
