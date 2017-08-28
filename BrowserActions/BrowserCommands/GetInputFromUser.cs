@@ -16,6 +16,8 @@ namespace CefBrowserControl.BrowserCommands
 
         public InsecureBool InputNeeded = new InsecureBool(true);
 
+        public InsecureBool KeepInFront = new InsecureBool(true);
+
         public string UserInputResult;
 
         public enum KeyList
@@ -40,6 +42,7 @@ namespace CefBrowserControl.BrowserCommands
             {
                 new KeyValuePairEx<string, object>("InsecureDisplayObjects", InsecureDisplayObjects),
                 new KeyValuePairEx<string, object>("InputNeeded", InputNeeded),
+                new KeyValuePairEx<string, object>("KeepInFront", KeepInFront),
             };
             InputParameterRequired = new List<string>()
             {
@@ -58,6 +61,8 @@ namespace CefBrowserControl.BrowserCommands
                     InsecureDisplayObjects = (List<object>) inputParameter.Value;
                 if (inputParameter.Key == "InputNeeded")
                     InputNeeded = (InsecureBool)inputParameter.Value;
+                if (inputParameter.Key == "KeepInFront")
+                    KeepInFront = (InsecureBool)inputParameter.Value;
             }
         }
     }
