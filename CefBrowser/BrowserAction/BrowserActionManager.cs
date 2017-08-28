@@ -67,7 +67,9 @@ namespace CefBrowser.BrowserAction
 
         private static string EscapeJavascript(string script)
         {
-            string sanitized = script.Replace(@"\", @"\\").Replace(@"'", @"\'");
+            string sanitized = script.Replace(@"\", @"\\").Replace(@"'", @"\'").Replace("\"", "\\\"");
+            //string sanitized = "atob('" + EncodingEx.Base64.Encoder.EncodeString(Encoding.UTF8, script) + "')";
+
             return sanitized;
         }
 
@@ -1807,7 +1809,6 @@ context.fill();
                     string script = $"(function(){{var result = document.evaluate('{EscapeJavascript(selectionString)}', document, null, XPathResult.ANY_TYPE, null ); " +
                         iterator + "return result.iterateNext();})()";
                     return script;
-
                 }
             }
             throw new NoSelectionTypeSpecified("Please define a selection type");
@@ -1972,7 +1973,7 @@ context.fill();
                         ? "document.getElementById('" + selector.SelectorString + "') != null ? 1 : 0"
                         : selector.SelectorExecuteActionOn ==
                           CefBrowserControl.BrowserAction.ExecuteActionOn.Xpath
-                            ? "document.evaluate(\"count(" + selector.SelectorString +
+                            ? "document.evaluate(\"count(" + EscapeJavascript(selector.SelectorString) +
                               ")\", document, null, XPathResult.ANY_TYPE, null )['numberValue'];"
                             : BuildExecuteOnSelector(selector.SelectorString,
                                   selector.SelectorExecuteActionOn, 2) + ".length";
