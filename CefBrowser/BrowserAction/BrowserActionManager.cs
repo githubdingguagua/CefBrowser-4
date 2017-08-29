@@ -1035,7 +1035,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         else if (action.ActionObject.GetType() == typeof(SetValue))
                                         {
                                             script = BuildExecuteOnSelector(element.Selector.SelectorString,
-                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".Value" + element.AttributeName.Value + " = '" +
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".Value = '" +
                                                               element.ValueToSet.Value + "'";
                                         }
                                         else
