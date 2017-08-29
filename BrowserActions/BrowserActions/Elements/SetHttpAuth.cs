@@ -10,7 +10,7 @@ namespace CefBrowserControl.BrowserActions.Elements
     [Serializable]
     public class SetHttpAuth : GetHttpAuth
     {
-        public InsecureBool Cancel = new InsecureBool(false);
+        public InsecureBool Cancel = new InsecureBool();
         public InsecureText Username = new InsecureText();
         public InsecureText Password = new InsecureText();
 
@@ -25,6 +25,8 @@ namespace CefBrowserControl.BrowserActions.Elements
                 HaveRequirementsBeenSet = true;
             else
                 return;
+
+            Cancel.Value = false;
 
             InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
             {

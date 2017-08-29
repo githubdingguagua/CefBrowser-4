@@ -14,9 +14,9 @@ namespace CefBrowserControl.BrowserCommands
         //Only text and base64 encoded images
         public List<object> InsecureDisplayObjects = new List<object>();
 
-        public InsecureBool InputNeeded = new InsecureBool(true);
+        public InsecureBool InputNeeded = new InsecureBool();
 
-        public InsecureBool KeepInFront = new InsecureBool(true);
+        public InsecureBool KeepInFront = new InsecureBool();
 
         public string UserInputResult;
 
@@ -37,6 +37,9 @@ namespace CefBrowserControl.BrowserCommands
             else
                 return;
             ReturnedOutputKeysList.Add(KeyList.UserInputResult.ToString());
+
+            InputNeeded.Value = true;
+            KeepInFront.Value = true;
 
             InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
             {
