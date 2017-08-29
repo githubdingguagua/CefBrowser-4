@@ -990,7 +990,8 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                             action.Successful = success;
                         }
                         else if (action.ActionObject.GetType() == typeof(SetStyle) ||
-                                 action.ActionObject.GetType() == typeof(SetAttribute))
+                                 action.ActionObject.GetType() == typeof(SetAttribute) ||
+                                 action.ActionObject.GetType() == typeof(SetValue))
                         {
                             List<object> objects = WebBrowserEx.ConvertObjectToObjectList(action.ActionObject);
                             bool success = true;
@@ -1017,15 +1018,31 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         FindElements(element.Selector, element.Timeout);
                                     for (int i = 0; i < numberOfElements.Key; i++)
                                     {
-                                        string script = BuildExecuteOnSelector(element.Selector.SelectorString,
-                                                            element.Selector.SelectorExecuteActionOn, i + 1, true) +
-                                                        (action.ActionObject.GetType() ==
-                                                         typeof(SetAttribute)
-                                                            ? ".setAttribute('" + element.AttributeName.Value + "', '" +
-                                                              element.ValueToSet.Value +
-                                                              "')"
-                                                            : ".style" + element.AttributeName.Value + " = '" +
-                                                              element.ValueToSet.Value + "'");
+                                        string script = "";
+
+                                        if (action.ActionObject.GetType() == typeof(SetAttribute))
+                                        {
+                                            script = BuildExecuteOnSelector(element.Selector.SelectorString,
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".setAttribute('" + element.AttributeName.Value + "', '" +
+                                                element.ValueToSet.Value + "')";
+                                        }
+                                        else if (action.ActionObject.GetType() == typeof(SetStyle))
+                                        {
+                                            script = BuildExecuteOnSelector(element.Selector.SelectorString,
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".style" + element.AttributeName.Value + " = '" +
+                                                              element.ValueToSet.Value + "'";
+                                        }
+                                        else if (action.ActionObject.GetType() == typeof(SetValue))
+                                        {
+                                            script = BuildExecuteOnSelector(element.Selector.SelectorString,
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".Value" + element.AttributeName.Value + " = '" +
+                                                              element.ValueToSet.Value + "'";
+                                        }
+                                        else
+                                        {
+                                            throw new Exception("Sorry no other type was defined here");
+                                        }
+
                                         GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
                                             EvaluateJavascript()
                                             {

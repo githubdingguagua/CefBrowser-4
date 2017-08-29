@@ -86,6 +86,7 @@
     <Compile Include="BrowserActions\Elements\SetHttpAuth.cs" />
     <Compile Include="BrowserActions\Elements\SetJsPrompt.cs" />
     <Compile Include="BrowserActions\Elements\SetStyle.cs" />
+    <Compile Include="BrowserActions\Elements\ExecJavascriptHelper\SetValue.cs" />
     <Compile Include="BrowserActions\Elements\SiteLoaded.cs" />
     <Compile Include="BrowserActions\Elements\TextToTypeIn.cs" />
     <Compile Include="BrowserActions\Helper\FrameDetails.cs" />

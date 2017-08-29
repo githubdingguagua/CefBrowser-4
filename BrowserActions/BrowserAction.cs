@@ -38,6 +38,8 @@ namespace CefBrowserControl
     [XmlInclude(typeof(InvokeMouseClick))]
     [XmlInclude(typeof(GetInnerText))]
     [XmlInclude(typeof(GetInnerHtml))]
+    [XmlInclude(typeof(SetValue))]
+
 
     [Serializable]
     public class BrowserAction : BaseObject
