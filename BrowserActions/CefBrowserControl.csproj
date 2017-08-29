@@ -66,6 +66,8 @@
     <Compile Include="BrowserActions\Elements\ElementToLoad.cs" />
     <Compile Include="BrowserActions\Elements\EventToTrigger.cs" />
     <Compile Include="BrowserActions\Elements\EventTypes\InvokeMouseClick.cs" />
+    <Compile Include="BrowserActions\Elements\ExecJavascriptHelper\GetInnerHtml.cs" />
+    <Compile Include="BrowserActions\Elements\ExecJavascriptHelper\GetInnerText.cs" />
     <Compile Include="BrowserActions\Elements\FrameLoaded.cs" />
     <Compile Include="BrowserActions\Elements\GetAttribute.cs" />
     <Compile Include="BrowserActions\Elements\GetFrameNames.cs" />
@@ -141,6 +143,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>rmdir $(TargetDir) /S /Q</PreBuildEvent>

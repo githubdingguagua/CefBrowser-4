@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using CefBrowserControl.BrowserActions.Elements;
 using CefBrowserControl.BrowserActions.Elements.EventTypes;
+using CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper;
 using CefBrowserControl.BrowserActions.Helper;
 using CefBrowserControl.Resources;
 
@@ -35,6 +36,9 @@ namespace CefBrowserControl
     [XmlInclude(typeof(KeyValuePairEx<ActionState, string>))]
     [XmlInclude(typeof(InvokeSubmit))]
     [XmlInclude(typeof(InvokeMouseClick))]
+    [XmlInclude(typeof(GetInnerText))]
+    [XmlInclude(typeof(GetInnerHtml))]
+
     [Serializable]
     public class BrowserAction : BaseObject
     {

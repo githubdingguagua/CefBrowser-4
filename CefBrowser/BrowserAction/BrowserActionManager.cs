@@ -10,6 +10,7 @@ using CefBrowser.Gateway;
 using CefBrowserControl;
 using CefBrowserControl.BrowserActions.Elements;
 using CefBrowserControl.BrowserActions.Elements.EventTypes;
+using CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper;
 using CefBrowserControl.BrowserActions.Helper;
 using CefBrowserControl.Resources;
 using Rectangle = CefBrowserControl.BrowserActions.Helper.Rectangle;
@@ -788,8 +789,10 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 action.Successful = found;
                             }
                         }
-                        else if (action.ActionObject.GetType() == typeof(InvokeSubmit) ||
-                                 action.ActionObject.GetType() == typeof(JavascriptToExecute))
+                        else if (action.ActionObject.GetType() == typeof(GetInnerHtml) ||
+                                action.ActionObject.GetType() == typeof(GetInnerText) ||
+                                action.ActionObject.GetType() == typeof(InvokeSubmit) ||
+                                action.ActionObject.GetType() == typeof(JavascriptToExecute))
                         {
                             var js = WebBrowserEx.ConvertObjectToObjectList(action.ActionObject);
 
