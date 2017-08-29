@@ -10,7 +10,7 @@ namespace CefBrowserControl.BrowserActions.Elements
     [Serializable]
     public class SetHttpAuth : GetHttpAuth
     {
-        public InsecureBool Cancel = new InsecureBool(true);
+        public InsecureBool Cancel = new InsecureBool(false);
         public InsecureText Username = new InsecureText();
         public InsecureText Password = new InsecureText();
 
