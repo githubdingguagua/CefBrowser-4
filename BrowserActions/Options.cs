@@ -5,7 +5,7 @@ namespace CefBrowserControl
     public class Options
     {
         public const int LockTimeOut = 100;
-        public const bool IsDebug = true;
+        public const bool IsDebug = false;
         public const int MaxBrowserInstances = 3;
         public const bool WindowsNormallyVisible = false;
         public static int? DefaultTimeoutSeconds = 30;
