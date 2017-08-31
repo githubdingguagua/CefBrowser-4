@@ -65,6 +65,7 @@
     <Compile Include="BrowserActions\Elements\ElementToClickOn.cs" />
     <Compile Include="BrowserActions\Elements\ElementToLoad.cs" />
     <Compile Include="BrowserActions\Elements\EventToTrigger.cs" />
+    <Compile Include="BrowserActions\Elements\EventTypes\InvokeFullKeyboardEvent.cs" />
     <Compile Include="BrowserActions\Elements\EventTypes\InvokeMouseClick.cs" />
     <Compile Include="BrowserActions\Elements\ExecJavascriptHelper\GetInnerHtml.cs" />
     <Compile Include="BrowserActions\Elements\ExecJavascriptHelper\GetInnerText.cs" />

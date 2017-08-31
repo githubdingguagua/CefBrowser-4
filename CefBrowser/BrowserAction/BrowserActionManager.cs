@@ -118,8 +118,8 @@ namespace CefBrowser.BrowserAction
                                                             (actionType==
                                                              typeof(GetAttribute)
                                                                 ? ".getAttribute('" +
-                                                                  element.AttributeName + "')"
-                                                                : ".style" + element.AttributeName);
+                                                                  element.AttributeName.Value + "')"
+                                                                : ".style." + element.AttributeName.Value);
             GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
                 EvaluateJavascript()
             {
@@ -522,7 +522,19 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                             {
                                                 var foundInThis = Convert.ToBoolean(response);
                                                 if (!foundInThis)
+                                                {
+                                                    if (element.Selector.ExpectedNumberOfElements.Value == 0)
+                                                    {
+                                                        element.ReturnedOutput.Add(
+                                                        new KeyValuePairEx<string, string>(
+                                                            ElementToLoad.KeyList.NumberOfFoundElements.ToString(),
+                                                            "0"));
+                                                        element.Successful = true;
+                                                        element.Completed = true;
+                                                    }
+                                                    else
                                                     found = false;
+                                                }
                                                 else
                                                 {
                                                     KeyValuePairEx<int, string> numberOfElements =
@@ -616,9 +628,12 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                         }
                         else if (action.ActionObject.GetType() == typeof(SecondsToWait))
                         {
-                            var secondsToSleep = (int) action.ActionObject;
+                            SecondsToWait secondsToWait = (SecondsToWait) action.ActionObject;
+                            var secondsToSleep = Convert.ToInt32(secondsToWait.Seconds.Value);
                             Thread.Sleep(secondsToSleep * 1000);
                             action.Successful = true;
+                            secondsToWait.Successful = true;
+                            secondsToWait.Completed = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(SiteLoaded))
                             //https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded
@@ -1029,7 +1044,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         else if (action.ActionObject.GetType() == typeof(SetStyle))
                                         {
                                             script = BuildExecuteOnSelector(element.Selector.SelectorString,
-                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".style" + element.AttributeName.Value + " = '" +
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".style." + element.AttributeName.Value + " = '" +
                                                               element.ValueToSet.Value + "'";
                                         }
                                         else if (action.ActionObject.GetType() == typeof(SetValue))
@@ -1100,11 +1115,11 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
 
                                         if (evaluateJavascript.Response.Success)
                                         {
-                                            element.Value = evaluateJavascript.Response.Message;
+                                            element.Value = evaluateJavascript.Response.Result.ToString();
                                             element.ReturnedOutput.Add(
                                                 new KeyValuePairEx<string, string>(
                                                     CefBrowserControl.BrowserActions.Elements.GetAttribute.KeyList
-                                                        .Value.ToString(), evaluateJavascript.Response.Message));
+                                                        .Value.ToString(), evaluateJavascript.Response.Result.ToString()));
                                             element.Successful = true;
                                         }
                                         else
@@ -1119,7 +1134,9 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 action.Successful = found;
                             }
                         }
-                        else if (action.ActionObject.GetType() == typeof(InvokeMouseClick) ||
+                        else if (
+                                 action.ActionObject.GetType() == typeof(InvokeFullKeyboardEvent) || 
+                                 action.ActionObject.GetType() == typeof(InvokeMouseClick) ||
                                  action.ActionObject.GetType() == typeof(EventToTrigger))
                         {
                             bool success = true;
@@ -1145,36 +1162,95 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         element.Timeout);
                                     for (int i = 0; i < numberOfElements.Key; i++)
                                     {
-                                        string script = @"(function(){var event = " + element.EventScriptBlock.Value + @"
-        var cb = " + BuildExecuteOnSelector(element.Selector.SelectorString,
-                                                            element.Selector.SelectorExecuteActionOn, i + 1, true) +
-                                                        @";
-        var cancelled = ! cb.dispatchEvent(event);
-        if(cancelled)
-            return 'Got canceled';
-        else
-            return 'Success';
-        })();
-        ";
-                                        GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
-                                            EvaluateJavascript()
+                                        if (action.ActionObject.GetType() == typeof(InvokeFullKeyboardEvent))
+                                        {
+                                            InvokeFullKeyboardEvent fullEvent = (InvokeFullKeyboardEvent) o;
+
+                                            bool successDown, successPress, successUp;
+
+                                            string eventDown = @"new KeyboardEvent('keydown', {
+    key: '" + fullEvent.KeyCode.Value+@"'
+  });";
+                                            string scriptDown = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), eventDown);
+                                            GatewayAction.EvaluateJavascript evaluateJavascriptDown = new GatewayAction.
+                                                EvaluateJavascript()
                                             {
                                                 Timeout = element.Timeout,
-                                                Script = script,
+                                                Script = scriptDown,
                                                 FrameName = action.ActionFrameName,
                                             };
-                                        _gateway.AddGatewayAction(evaluateJavascript);
-                                        while (!evaluateJavascript.Completed)
-                                            Thread.Sleep(_threadSleepTime);
-                                        element.Successful = evaluateJavascript.Response.Success;
-                                        element.Result = evaluateJavascript.Response.Message;
-                                        element.ReturnedOutput.Add(
-                                            new KeyValuePairEx<string, string>(
-                                                EventToTrigger.KeyList.Result.ToString(),
-                                                evaluateJavascript.Response.Message));
-                                        if (success == true && evaluateJavascript.Response.Success == false)
-                                            success = false;
-                                        element.Completed = true;
+                                            _gateway.AddGatewayAction(evaluateJavascriptDown);
+                                            while (!evaluateJavascriptDown.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            successDown = evaluateJavascriptDown.Success;
+
+                                            string eventPress = @"new KeyboardEvent('keypress', {
+    key: '" + fullEvent.KeyCode.Value + @"'
+  });";
+                                            string scriptPress = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), eventPress);
+                                            GatewayAction.EvaluateJavascript evaluateJavascriptPress = new GatewayAction.
+                                                EvaluateJavascript()
+                                            {
+                                                Timeout = element.Timeout,
+                                                Script = scriptPress,
+                                                FrameName = action.ActionFrameName,
+                                            };
+                                            _gateway.AddGatewayAction(evaluateJavascriptPress);
+                                            while (!evaluateJavascriptPress.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            successPress = evaluateJavascriptPress.Success;
+
+                                            string eventUp = @"new KeyboardEvent('keyup', {
+    key: '" + fullEvent.KeyCode.Value + @"'
+  });";
+                                            string scriptUp = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), eventUp);
+                                            GatewayAction.EvaluateJavascript evaluateJavascriptUp = new GatewayAction.
+                                                EvaluateJavascript()
+                                            {
+                                                Timeout = element.Timeout,
+                                                Script = scriptUp,
+                                                FrameName = action.ActionFrameName,
+                                            };
+                                            _gateway.AddGatewayAction(evaluateJavascriptUp);
+                                            while (!evaluateJavascriptUp.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            successUp = evaluateJavascriptUp.Success;
+
+                                            string allScripts = scriptDown + scriptPress + scriptUp;
+
+                                            if (successDown && successUp && successPress)
+                                            {
+                                                fullEvent.Completed = true;
+                                                fullEvent.Successful = true;
+                                                element.Completed = true;
+                                                element.Successful = true;
+                                                success = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            string script = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), element.EventScriptBlock.Value);
+
+                                            GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
+                                                EvaluateJavascript()
+                                                {
+                                                    Timeout = element.Timeout,
+                                                    Script = script,
+                                                    FrameName = action.ActionFrameName,
+                                                };
+                                            _gateway.AddGatewayAction(evaluateJavascript);
+                                            while (!evaluateJavascript.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            element.Successful = evaluateJavascript.Response.Success;
+                                            element.Result = evaluateJavascript.Response.Message;
+                                            element.ReturnedOutput.Add(
+                                                new KeyValuePairEx<string, string>(
+                                                    EventToTrigger.KeyList.Result.ToString(),
+                                                    evaluateJavascript.Response.Message));
+                                            if (success == true && evaluateJavascript.Response.Success == false)
+                                                success = false;
+                                            element.Completed = true;
+                                        }
                                     }
                                     if (numberOfElements.Key == 0)
                                         found = false;
@@ -1775,10 +1851,6 @@ context.fill();
 
                             #endregion
                         }
-                        else if (action.ActionObject.GetType() == typeof(SecondsToWait))
-                        {
-
-                        }
                     }
 
                     foreach (var element in ((BaseObject) action.ActionObject).ReturnedOutput)
@@ -1797,6 +1869,21 @@ context.fill();
                 #endregion
             }
         }
+
+        private static string BuildEventScriptBlock(string selectorString, string eventScriptBlock)
+        {
+            string returnValue = @"(function(){var event = " + eventScriptBlock + @"
+var cb = " + selectorString +@";
+var cancelled = ! cb.dispatchEvent(event);
+if(cancelled)
+    return 'Got canceled';
+else
+    return 'Success';
+})();
+";
+            return returnValue;
+        }
+
 
         private static string BuildExecuteOnSelector(string selectionString,
             CefBrowserControl.BrowserAction.ExecuteActionOn executeActionOn,
@@ -2044,14 +2131,8 @@ context.fill();
             if (selector.ExpectedNumberOfElements.Value == numberOfElements ||
                 selector.ExpectedNumberOfElements.Value == 0)
                 return new KeyValuePairEx<int, string>(numberOfElements,
-                    "There are " + numberOfElements +
-                    " of " + selector.SelectorString +
-                    " Elements ");
-            return new KeyValuePairEx<int, string>(numberOfElements, "There were " + numberOfElements +
-                                                                   " instead of the expected " +
-                                                                   selector.ExpectedNumberOfElements +
-                                                                   " of " +
-                                                                   selector.ExpectedNumberOfElements);
+                    numberOfElements.ToString() );
+            return new KeyValuePairEx<int, string>(numberOfElements, numberOfElements.ToString());
         }
 
     }

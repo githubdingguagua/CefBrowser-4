@@ -39,6 +39,8 @@ namespace CefBrowserControl
     [XmlInclude(typeof(GetInnerText))]
     [XmlInclude(typeof(GetInnerHtml))]
     [XmlInclude(typeof(SetValue))]
+    [XmlInclude(typeof(InvokeFullKeyboardEvent))]
+
 
 
     [Serializable]

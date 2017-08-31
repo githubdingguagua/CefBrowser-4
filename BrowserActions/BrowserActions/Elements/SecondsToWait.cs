@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using CefBrowserControl.Resources;
 
 namespace CefBrowserControl.BrowserActions.Elements
 {
     [Serializable]
     public class SecondsToWait :BaseObject, IInstanciateInputParameters //Can be used for await and action
     {
-        public TimeSpan SecondsToWaitInt = TimeSpan.Zero;
+        public InsecureInt Seconds = new InsecureInt();
 
         public SecondsToWait()
         {
@@ -19,9 +20,12 @@ namespace CefBrowserControl.BrowserActions.Elements
                 HaveRequirementsBeenSet = true;
             else
                 return;
+
+            Seconds = new InsecureInt(1);
+
             InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
             {
-                new KeyValuePairEx<string, object>("SecondsToWaitInt", SecondsToWaitInt),
+                new KeyValuePairEx<string, object>("Seconds", Seconds),
             };
             InputParameterRequired = new List<string>()
             {
@@ -35,8 +39,8 @@ namespace CefBrowserControl.BrowserActions.Elements
         {
             foreach (var inputParameter in InputParameterAvailable)
             {
-                if (inputParameter.Key == "SecondsToWaitInt")
-                    SecondsToWaitInt = (TimeSpan)inputParameter.Value;
+                if (inputParameter.Key == "Seconds")
+                    Seconds.Value = ((InsecureInt) inputParameter.Value).Value;
             }
         }
     }

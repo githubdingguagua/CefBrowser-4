@@ -26,7 +26,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             
         }
 
-        public void NewInstance()
+        public new void NewInstance()
         {
             if (!HaveRequirementsBeenSet)
                 HaveRequirementsBeenSet = true;
@@ -55,7 +55,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             {
                 if (inputParameter.Key == "Selector")
                     Selector = (Selector)inputParameter.Value;
-                else if (inputParameter.Key == "DoubleClick")
+                else if (inputParameter.Key == "EventScriptBlock")
                     EventScriptBlock = (InsecureText)inputParameter.Value;
             }
         }
