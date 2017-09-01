@@ -202,10 +202,17 @@ namespace CefBrowser
                                         {
                                             //Visibility = visibility.Visible.Value ? Visibility.Visible : Visibility.Hidden;
                                             //ShowInTaskbar = visibility.Visible.Value;
-                                            if(visibility.Visible.Value)
+                                            if (visibility.Visible.Value)
+                                            {
+                                                Topmost = true;
+                                                Activate();
                                                 Show();
+                                            }
                                             else
+                                            {
+                                                Topmost = false;
                                                 Hide();
+                                            }
 
                                         });
                                         visibility.Successful = true;
@@ -230,6 +237,25 @@ namespace CefBrowser
                                         // ReSharper disable once HeuristicUnreachableCode
                                         visibility.Completed = true;
                                         forRemoving.Add(visibility.UCID);
+                                        break;
+                                    case "GetInputFromUser":
+                                        GetInputFromUser input = (GetInputFromUser)ucidToBrowsercommand.Value;
+                                        Dispatcher.Invoke(() =>
+                                        {
+                                            GetInput form = new GetInput((GetInputFromUser)ucidToBrowsercommand.Value);
+                                            //form.Show();
+                                        });
+                                        while (true)
+                                        {
+                                            if (input.Completed || input.TimedOut)
+                                                break;
+                                            Thread.Sleep(100);
+                                        }
+                                        //form.Dispose();
+                                        //form = null;
+                                        //input.Successful = true;
+                                        input.Completed = true;
+                                        forRemoving.Add(input.UCID);
                                         break;
                                     default:
                                         throw new Exception(

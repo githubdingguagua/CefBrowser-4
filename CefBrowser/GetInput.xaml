@@ -1,0 +1,25 @@
+﻿<Window x:Class="CefBrowser.GetInput"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CefBrowser"
+        mc:Ignorable="d"
+        Title="Input needed..." Icon="earth.ico" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Height="314" Topmost="True" WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="5" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <StackPanel x:Name="StackPanelInsecureObjects" >
+            <ScrollViewer Margin="0,5">
+                <TextBox Text="asdfasd&#xA;asdfasdf&#xA;dasdfasdf&#xA;asdsadfasdf&#xD;&#xA;asdfasd" Width="350" IsReadOnly="True" />
+            </ScrollViewer>
+            <Image Margin="0,5" Height="80" Width="350" Source="earth.ico"/>
+        </StackPanel>
+        <StackPanel x:Name="StackPanelInput" >
+            <Label Content="Your answer:" />
+            <TextBox Margin="0,5" Name="TextBoxUserInput" KeyDown="TextBoxUserInput_KeyDown" />
+        </StackPanel>
+        <StackPanel x:Name="StackPanelButtons" Orientation="Horizontal" Margin="0,5">
+            <Button x:Name="ButtonOk" Content="OK" Width="170" Click="ButtonOk_Click" />
+            <Button x:Name="ButtonCancel" Content="Cancel" Margin="10,0,0,0" Width="170" Click="ButtonCancel_Click" />
+        </StackPanel>
+    </StackPanel>
+</Window>
