@@ -28,10 +28,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 return;
             ReturnedOutputKeysList.Add(KeyList.NumberOfFoundElements.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector"
@@ -48,6 +45,16 @@ namespace CefBrowserControl.BrowserActions.Elements
                 if (inputParameter.Key == "Selector")
                     Selector = (Selector)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+            };
         }
     }
 }

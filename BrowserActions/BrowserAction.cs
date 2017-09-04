@@ -33,7 +33,7 @@ namespace CefBrowserControl
     [XmlInclude(typeof(BaseObject))]
     [XmlInclude(typeof(GetImage))]
     [XmlInclude(typeof(KeyValuePairEx<string, string>))]
-    [XmlInclude(typeof(KeyValuePairEx<ActionState, string>))]
+    [XmlInclude(typeof(KeyValuePairEx<BaseObject.ActionState, string>))]
     [XmlInclude(typeof(InvokeSubmit))]
     [XmlInclude(typeof(InvokeMouseClick))]
     [XmlInclude(typeof(GetInnerText))]
@@ -44,7 +44,7 @@ namespace CefBrowserControl
 
 
     [Serializable]
-    public class BrowserAction : BaseObject
+    public class BrowserAction 
     {
         private static int counter = 0;
 
@@ -56,17 +56,17 @@ namespace CefBrowserControl
         {
             GenerateNewUCID();
 
-            Description =
-                @"A 'Browser Action' can be sent to the browser and interacts with the DOM. You can nearly interact with everything you can interact in a normal browser.";
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ActionObject", ActionObject),
-                new KeyValuePairEx<string, object>("ActionFrameName", ActionFrameName),
-            };
-            InputParameterRequired = new List<string>
-            {
-                "ActionObject",
-            };
+            //Description =
+            //    @"A 'Browser Action' can be sent to the browser and interacts with the DOM. You can nearly interact with everything you can interact in a normal browser.";
+            //InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            //{
+            //    //new KeyValuePairEx<string, object>("ActionObject", ActionObject),
+            //    //new KeyValuePairEx<string, object>("ActionFrameName", ActionFrameName),
+            //};
+            //InputParameterRequired = new List<string>
+            //{
+            //    "ActionObject",
+            //};
         }
 
         public BrowserAction(string uid): this()

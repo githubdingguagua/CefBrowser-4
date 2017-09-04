@@ -24,12 +24,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 HaveRequirementsBeenSet = true;
             else
                 return;
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("Text", Text),
-                new KeyValuePairEx<string, object>("PressEnterAfterwards", PressEnterAfterwards),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -51,6 +46,21 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "PressEnterAfterwards")
                     PressEnterAfterwards = (InsecureBool)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 3)
+                NewInstance();
         }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable.Clear();
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("Text", Text),
+                new KeyValuePairEx<string, object>("PressEnterAfterwards", PressEnterAfterwards),
+            };
+        }
+
+
     }
 }

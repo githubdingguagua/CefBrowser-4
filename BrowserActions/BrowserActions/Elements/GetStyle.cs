@@ -44,6 +44,8 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "AttributeName")
                     AttributeName = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
         }
     }
 }

@@ -22,10 +22,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 HaveRequirementsBeenSet = true;
             else
                 return;
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedFrameName", ExpectedFrameName),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "ExpectedFrameName"
@@ -42,6 +39,16 @@ namespace CefBrowserControl.BrowserActions.Elements
                 if (inputParameter.Key == "ExpectedFrameName")
                     ExpectedFrameName = (StringOrRegex)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedFrameName", ExpectedFrameName),
+            };
         }
     }
 }

@@ -20,16 +20,13 @@ namespace CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper
                 return;
             ReturnedOutputKeysList.Add(KeyList.ExecutionResult.ToString());
             Javascript.Value = ".innerHTML";
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
             };
             Description =
-               "gets the inner HTML of an element";
+                "gets the inner HTML of an element";
             TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
@@ -38,8 +35,18 @@ namespace CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper
             foreach (var inputParameter in InputParameterAvailable)
             {
                 if (inputParameter.Key == "Selector")
-                    Selector = (Selector)inputParameter.Value;
+                    Selector = (Selector) inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+            };
         }
     }
 }

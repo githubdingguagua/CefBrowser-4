@@ -28,17 +28,7 @@ namespace CefBrowserControl.BrowserActions.Elements
 
             Cancel.Value = false;
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedSchemaType", ExpectedSchemaType),
-                new KeyValuePairEx<string, object>("ExpectedHost", ExpectedHost),
-                new KeyValuePairEx<string, object>("ExpectedPort", ExpectedPort),
-                new KeyValuePairEx<string, object>("ExpectedRealm", ExpectedRealm),
-                new KeyValuePairEx<string, object>("Cancel", Cancel),
-                new KeyValuePairEx<string, object>("Username", Username),
-                new KeyValuePairEx<string, object>("Password", Password),
-
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Cancel",
@@ -69,6 +59,22 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "Password")
                     Password = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 7)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedSchemaType", ExpectedSchemaType),
+                new KeyValuePairEx<string, object>("ExpectedHost", ExpectedHost),
+                new KeyValuePairEx<string, object>("ExpectedPort", ExpectedPort),
+                new KeyValuePairEx<string, object>("ExpectedRealm", ExpectedRealm),
+                new KeyValuePairEx<string, object>("Cancel", Cancel),
+                new KeyValuePairEx<string, object>("Username", Username),
+                new KeyValuePairEx<string, object>("Password", Password),
+            };
         }
     }
 

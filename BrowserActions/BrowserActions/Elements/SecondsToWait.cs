@@ -23,10 +23,7 @@ namespace CefBrowserControl.BrowserActions.Elements
 
             Seconds = new InsecureInt(1);
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Seconds", Seconds),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "SecondsToWaitInt"
@@ -42,6 +39,16 @@ namespace CefBrowserControl.BrowserActions.Elements
                 if (inputParameter.Key == "Seconds")
                     Seconds.Value = ((InsecureInt) inputParameter.Value).Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Seconds", Seconds),
+            };
         }
     }
 }

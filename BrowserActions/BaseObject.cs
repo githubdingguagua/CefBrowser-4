@@ -158,5 +158,10 @@ namespace CefBrowserControl
         {
             throw new NotImplementedException();
         }
+
+        public void SetAvailableInputParameters()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -42,11 +42,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             ReturnedOutputKeysList.Add(KeyList.ExecutionResult.ToString());
             ReturnedOutputKeysList.Add(KeyList.ExecutedJavascript.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("Javascript", Javascript),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -66,6 +62,17 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "Javascript")
                     Javascript = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("Javascript", Javascript),
+            };
         }
     }
 }

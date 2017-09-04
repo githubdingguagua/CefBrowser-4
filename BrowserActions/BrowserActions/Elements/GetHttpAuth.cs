@@ -49,13 +49,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             ReturnedOutputKeysList.Add(KeyList.Scheme.ToString());
             ReturnedOutputKeysList.Add(KeyList.Realm.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedSchemaType", ExpectedSchemaType),
-                new KeyValuePairEx<string, object>("ExpectedHost", ExpectedHost),
-                new KeyValuePairEx<string, object>("ExpectedPort", ExpectedPort),
-                new KeyValuePairEx<string, object>("ExpectedRealm", ExpectedRealm),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
             };
@@ -77,6 +71,19 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "ExpectedRealm")
                     ExpectedRealm = (StringOrRegex)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 4)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedSchemaType", ExpectedSchemaType),
+                new KeyValuePairEx<string, object>("ExpectedHost", ExpectedHost),
+                new KeyValuePairEx<string, object>("ExpectedPort", ExpectedPort),
+                new KeyValuePairEx<string, object>("ExpectedRealm", ExpectedRealm),
+            };
         }
     }
 }

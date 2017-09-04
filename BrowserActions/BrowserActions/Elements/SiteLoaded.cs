@@ -31,10 +31,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 return;
             ReturnedOutputKeysList.Add(KeyList.SiteLoadedUrl.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedSiteToLoad", ExpectedSiteToLoad),
-            };
+           SetAvailableInputParameters();
             InputParameterSet = new List<KeyValuePairEx<string, object>>()
             {
                 new KeyValuePairEx<string, object>("ExpectedSiteToLoad", ExpectedSiteToLoad),
@@ -55,6 +52,16 @@ namespace CefBrowserControl.BrowserActions.Elements
                 if (inputParameter.Key == "ExpectedSiteToLoad")
                     ExpectedSiteToLoad = (StringOrRegex)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedSiteToLoad", ExpectedSiteToLoad),
+            };
         }
     }
 }

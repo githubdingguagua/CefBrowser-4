@@ -46,6 +46,8 @@ namespace CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper
                 else if (inputParameter.Key == "ValueToSet")
                     ValueToSet = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 3)
+                NewInstance();
         }
     }
 }

@@ -50,6 +50,14 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
             }
         }
 
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+            };
+        }
+
         public new void NewInstance()
         {
             if (!HaveRequirementsBeenSet)
@@ -62,10 +70,7 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
     'bubbles': true,
     'cancelable': true
   });";
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -82,6 +87,8 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
                 if (inputParameter.Key == "Selector")
                     Selector = (Selector)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
         }
     }
 }

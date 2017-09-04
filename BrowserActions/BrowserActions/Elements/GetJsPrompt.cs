@@ -46,12 +46,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             ReturnedOutputKeysList.Add(KeyList.DefaultPromptValue.ToString());
             ReturnedOutputKeysList.Add(KeyList.DialogType.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedMessageText", ExpectedMessageText),
-                new KeyValuePairEx<string, object>("ExpectedDefaultPromptValue", ExpectedDefaultPromptValue),
-                new KeyValuePairEx<string, object>("ExpectedDialogType", ExpectedDialogType),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
             };
@@ -71,6 +66,19 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "ExpectedDialogType")
                     ExpectedDialogType = (InsecureDialogType)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 3)
+                NewInstance();
         }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedMessageText", ExpectedMessageText),
+                new KeyValuePairEx<string, object>("ExpectedDefaultPromptValue", ExpectedDefaultPromptValue),
+                new KeyValuePairEx<string, object>("ExpectedDialogType", ExpectedDialogType),
+            };
+        }
+
     }
 }

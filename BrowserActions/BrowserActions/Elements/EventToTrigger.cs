@@ -34,11 +34,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 return;
             ReturnedOutputKeysList.Add(KeyList.Result.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("EventScriptBlock", EventScriptBlock),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -58,6 +54,17 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "EventScriptBlock")
                     EventScriptBlock = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("EventScriptBlock", EventScriptBlock),
+            };
         }
     }
 }

@@ -27,10 +27,7 @@ namespace CefBrowserControl.BrowserCommands
                 HaveRequirementsBeenSet = true;
             else
                 return;
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Url", Url),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Url"
@@ -47,6 +44,15 @@ namespace CefBrowserControl.BrowserCommands
                 if (inputParameter.Key == "Url")
                     Url = (InsecureText)inputParameter.Value;
             }
+            if(InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Url", Url),
+            };
         }
     }
 }

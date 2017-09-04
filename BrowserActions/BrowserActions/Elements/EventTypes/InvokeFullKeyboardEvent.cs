@@ -65,11 +65,7 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
             ReturnedOutputKeysList.Add(KeyList.Result.ToString());
             EventScriptBlock.Value = "";
             KeyCode.Value = "ArrowLeft";
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("KeyCode", KeyCode),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -78,6 +74,15 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
             Description =
                @"Invokes keydown keypress and keyup event of the given keyboard code of https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values like ArrowLeft, ArrowRight etc. or a, test this on https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code";
             TimeoutInSec = Options.DefaultTimeoutSeconds;
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("KeyCode", KeyCode),
+            };
         }
 
         public new void ReadAvailableInputParameters()
@@ -89,6 +94,9 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
                 if (inputParameter.Key == "KeyCode")
                     KeyCode.Value = ((InsecureText)inputParameter.Value).Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
         }
+
     }
 }

@@ -41,5 +41,10 @@ namespace CefBrowserControl.BrowserActions.Elements
         {
 
         }
+
+        public new void SetAvailableInputParameters()
+        {
+
+        }
     }
 }

@@ -41,12 +41,7 @@ namespace CefBrowserControl.BrowserCommands
             InputNeeded.Value = true;
             KeepInFront.Value = true;
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("InsecureDisplayObjects", InsecureDisplayObjects),
-                new KeyValuePairEx<string, object>("InputNeeded", InputNeeded),
-                new KeyValuePairEx<string, object>("KeepInFront", KeepInFront),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "InsecureDisplayObjects",
@@ -66,7 +61,19 @@ namespace CefBrowserControl.BrowserCommands
                     InputNeeded = (InsecureBool)inputParameter.Value;
                 if (inputParameter.Key == "KeepInFront")
                     KeepInFront = (InsecureBool)inputParameter.Value;
+                if (InputParameterAvailable.Count != 3)
+                    NewInstance();
             }
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("InsecureDisplayObjects", InsecureDisplayObjects),
+                new KeyValuePairEx<string, object>("InputNeeded", InputNeeded),
+                new KeyValuePairEx<string, object>("KeepInFront", KeepInFront),
+            };
         }
     }
 }

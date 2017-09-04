@@ -47,6 +47,8 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "ExpectedValue")
                     ExpectedValue = (StringOrRegex)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 3)
+                NewInstance();
         }
     }
 }
