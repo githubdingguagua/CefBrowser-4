@@ -1,32 +1,37 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CefBrowserControl.Resources;
 
-namespace CefBrowserControl.BrowserActions.Elements
+namespace CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper
 {
     [Serializable]
-    public class SetStyle : SetAttribute
+    public class SetValue : SetAttribute
     {
-        public SetStyle() : base()
+        public SetValue()
         {
-          
+
         }
 
-
-        public new void NewInstance()
+        public void NewInstance()
         {
             if (!HaveRequirementsBeenSet)
                 HaveRequirementsBeenSet = true;
             else
                 return;
-           SetAvailableInputParameters();
+            AttributeName.Value = "Value";
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("ValueToSet", ValueToSet),
+            };
             InputParameterRequired = new List<string>()
             {
                 "Selector",
                 "AttributeName",
                 "ValueToSet",
             };
-            Description = "Sets an css attribute value of one or more elements. AttributeName = Css Style Name!";
+            Description =
+                "Instructs the browser set the attribute value of the one or more elements.";
             TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
@@ -43,15 +48,6 @@ namespace CefBrowserControl.BrowserActions.Elements
             }
             if (InputParameterAvailable.Count != 3)
                 NewInstance();
-        }
-        public new void SetAvailableInputParameters()
-        {
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("AttributeName", AttributeName),
-                new KeyValuePairEx<string, object>("ValueToSet", ValueToSet),
-            };
         }
     }
 }

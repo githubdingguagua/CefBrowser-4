@@ -36,17 +36,14 @@ namespace CefBrowserControl.BrowserActions.Elements
             ReturnedOutputKeysList.Add(KeyList.ResourceUrl.ToString());
             ReturnedOutputKeysList.Add(KeyList.LoadedAt.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedResourceUrl", ExpectedResourceUrl),
-                new KeyValuePairEx<string, object>("ExpectedFrameName", ExpectedFrameName),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "ExpectedResourceUrl",
             };
             Description =
                 "Instructs the browser to check if a resource has been loaded and wait for it. POSSIBLE DEADLOCK AHEAD!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -58,6 +55,17 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "ExpectedFrameName")
                     ExpectedFrameName = (StringOrRegex)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedResourceUrl", ExpectedResourceUrl),
+                new KeyValuePairEx<string, object>("ExpectedFrameName", ExpectedFrameName),
+            };
         }
     }
 }

@@ -1,39 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CefBrowserControl.Resources;
 
-namespace CefBrowserControl.BrowserCommands
+namespace CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper
 {
     [Serializable]
-    public class LoadUrl : BrowserCommand, IInstanciateInputParameters
+    public class GetInnerHtml : JavascriptToExecute
     {
-        public InsecureText Url = new InsecureText(Options.DefaultUrl);
-
-        public LoadUrl() : base()
+        public GetInnerHtml()
         {
-            
+
         }
 
-        public LoadUrl(string uid, string url) : this()
-        {
-            UID = uid;
-            Url.Value = url;
-        }
-
-        public void NewInstance()
+        public new void NewInstance()
         {
             if (!HaveRequirementsBeenSet)
                 HaveRequirementsBeenSet = true;
             else
                 return;
-           SetAvailableInputParameters();
+            ReturnedOutputKeysList.Add(KeyList.ExecutionResult.ToString());
+            Javascript.Value = ".innerHTML";
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
-                "Url"
+                "Selector",
             };
             Description =
-                "Instructs the browser to load the specified url";
+                "gets the inner HTML of an element";
             TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
@@ -41,17 +34,18 @@ namespace CefBrowserControl.BrowserCommands
         {
             foreach (var inputParameter in InputParameterAvailable)
             {
-                if (inputParameter.Key == "Url")
-                    Url = (InsecureText)inputParameter.Value;
+                if (inputParameter.Key == "Selector")
+                    Selector = (Selector) inputParameter.Value;
             }
-            if(InputParameterAvailable.Count != 1)
+            if (InputParameterAvailable.Count != 1)
                 NewInstance();
         }
+
         public new void SetAvailableInputParameters()
         {
             InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
             {
-                new KeyValuePairEx<string, object>("Url", Url),
+                new KeyValuePairEx<string, object>("Selector", Selector),
             };
         }
     }

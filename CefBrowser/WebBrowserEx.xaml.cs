@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,7 +12,6 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using CefBrowser.BrowserAction;
 using CefBrowser.Gateway;
 using CefBrowser.Handler;
@@ -65,23 +65,32 @@ namespace CefBrowser
 
         private static string UID = "";
 
+        public string GetTemporaryDirectory()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            return tempDirectory;
+        }
+
         public WebBrowserEx()
         {
+            CefSettings settings = new CefSettings();
+            settings.CachePath = GetTemporaryDirectory();
+            if (!Cef.IsInitialized)
+                Cef.Initialize(settings);
+
             InitializeComponent();
+
+            testvas.Background = null;
+            
+
+            
+
             //DO NOT USE BROWSER GATEWAY WITHOUT BROWSERACTIONMANAGER!!!!!
             ActionBrowserGateway = new Gateway.Gateway(this);
             ActionManager = new BrowserActionManager(ActionBrowserGateway);
 
-            testvas.Background = null;
-            CefSettings settings = new CefSettings();
-            
-            settings.SetOffScreenRenderingBestPerformanceArgs();
-            //settings.CefCommandLineArgs.Add("disable-gpu", "1");
-            //settings.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
-            //settings.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
-            //settings.CefCommandLineArgs.Add("disable-gpu-vsync", "1"); //Disable Vsync
-            if (!Cef.IsInitialized)
-                Cef.Initialize(settings);
+           
             //if (!Cef.IsInitialized)
             //    Cef.Initialize();
             Browser.LoadingStateChanged += BrowserOnLoadingStateChanged;
@@ -104,6 +113,8 @@ namespace CefBrowser
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!Options.WindowsNormallyVisible)
+                Hide();
             //ScrollFactoring scrollSettings = ScrollFactoring.Default;
             //if ((int)ActualWidth != scrollSettings.lastWidth || (int)ActualHeight != scrollSettings.lastHeight)
             //{
@@ -185,10 +196,23 @@ namespace CefBrowser
                                     case "SwitchWindowVisibility":
                                         SwitchWindowVisibility visibility =
                                             (SwitchWindowVisibility) ucidToBrowsercommand.Value;
+                                        //Visibility = visibility.Visible.Value ? Visibility.Visible : Visibility.Hidden;
+                                        //ShowInTaskbar = visibility.Visible.Value;
                                         Dispatcher.Invoke(() =>
                                         {
-                                            Visibility = visibility.Visible.Value ? Visibility.Visible : Visibility.Hidden;
-                                            ShowInTaskbar = visibility.Visible.Value;
+                                            //Visibility = visibility.Visible.Value ? Visibility.Visible : Visibility.Hidden;
+                                            //ShowInTaskbar = visibility.Visible.Value;
+                                            if (visibility.Visible.Value)
+                                            {
+                                                Topmost = true;
+                                                Activate();
+                                                Show();
+                                            }
+                                            else
+                                            {
+                                                Topmost = false;
+                                                Hide();
+                                            }
 
                                         });
                                         visibility.Successful = true;
@@ -213,6 +237,25 @@ namespace CefBrowser
                                         // ReSharper disable once HeuristicUnreachableCode
                                         visibility.Completed = true;
                                         forRemoving.Add(visibility.UCID);
+                                        break;
+                                    case "GetInputFromUser":
+                                        GetInputFromUser input = (GetInputFromUser)ucidToBrowsercommand.Value;
+                                        Dispatcher.Invoke(() =>
+                                        {
+                                            GetInput form = new GetInput((GetInputFromUser)ucidToBrowsercommand.Value);
+                                            //form.Show();
+                                        });
+                                        while (true)
+                                        {
+                                            if (input.Completed || input.TimedOut)
+                                                break;
+                                            Thread.Sleep(100);
+                                        }
+                                        //form.Dispose();
+                                        //form = null;
+                                        //input.Successful = true;
+                                        input.Completed = true;
+                                        forRemoving.Add(input.UCID);
                                         break;
                                     default:
                                         throw new Exception(

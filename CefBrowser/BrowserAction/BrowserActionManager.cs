@@ -10,6 +10,7 @@ using CefBrowser.Gateway;
 using CefBrowserControl;
 using CefBrowserControl.BrowserActions.Elements;
 using CefBrowserControl.BrowserActions.Elements.EventTypes;
+using CefBrowserControl.BrowserActions.Elements.ExecJavascriptHelper;
 using CefBrowserControl.BrowserActions.Helper;
 using CefBrowserControl.Resources;
 using Rectangle = CefBrowserControl.BrowserActions.Helper.Rectangle;
@@ -65,6 +66,14 @@ namespace CefBrowser.BrowserAction
             ExecutingActions = false;
         }
 
+        private static string EscapeJavascript(string script)
+        {
+            string sanitized = script.Replace(@"\", @"\\").Replace(@"'", @"\'").Replace("\"", "\\\"");
+            //string sanitized = "atob('" + EncodingEx.Base64.Encoder.EncodeString(Encoding.UTF8, script) + "')";
+
+            return sanitized;
+        }
+
         public void AddBrowserActions(object browserAction)
         {
             _actionListLockSlim.EnterWriteLock();
@@ -109,8 +118,8 @@ namespace CefBrowser.BrowserAction
                                                             (actionType==
                                                              typeof(GetAttribute)
                                                                 ? ".getAttribute('" +
-                                                                  element.AttributeName + "')"
-                                                                : ".style" + element.AttributeName);
+                                                                  element.AttributeName.Value + "')"
+                                                                : ".style." + element.AttributeName.Value);
             GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
                 EvaluateJavascript()
             {
@@ -148,6 +157,9 @@ namespace CefBrowser.BrowserAction
                 foreach (object actionObject in actionList)
                 {
                     var action = (CefBrowserControl.BrowserAction) actionObject;
+                    var baseObject = ((BaseObject) action.ActionObject);
+                    if (baseObject.TimeoutInSec != null)
+                        baseObject.Timeout = new TimeSpan(0, 0, baseObject.TimeoutInSec.Value);
                     //var actionFrame = _webBrowser.GetAccordingFrame(action.ActionFrameName);
 
                     if (action.ActionObject != null)
@@ -178,7 +190,7 @@ ctx.drawImage(img, 0, 0);
 var dataURL = canvas.toDataURL('image/png');
 return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     javascript.Script =
-                                        action.TranslatePlaceholderStringToSingleString(scriptblock);
+                                        baseObject.TranslatePlaceholderStringToSingleString(scriptblock);
                                     _gateway.AddGatewayAction(javascript);
                                     while (true)
                                     {
@@ -209,7 +221,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 if (success)
                                     break;
                             }
-                            action.Successful = success;
+                            baseObject.Successful = success;
                         }
                         else if (action.ActionObject.GetType() == typeof(GetHttpAuth))
                         {
@@ -272,7 +284,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 }
                             }
                             if (!failedOnce)
-                                action.Successful = true;
+                                baseObject.Successful = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(SetHttpAuth))
                         {
@@ -286,13 +298,13 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     SetHttpAuth setHttpAuth = (SetHttpAuth)o;
                                     GatewayAction.SetHttpAuth setHttpAuthGw = new GatewayAction.SetHttpAuth()
                                     {
-                                        ExpectedRealm = action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(setHttpAuth.ExpectedRealm),
+                                        ExpectedRealm = baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(setHttpAuth.ExpectedRealm),
                                         ExpectedPort = setHttpAuth.ExpectedPort.Value,
                                         ExpectedSchemaType = setHttpAuth.ExpectedSchemaType.Value,
-                                        ExpectedHost = action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(setHttpAuth.ExpectedHost),
+                                        ExpectedHost = baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(setHttpAuth.ExpectedHost),
                                         Cancel = setHttpAuth.Cancel.Value,
-                                        Username = action.TranslatePlaceholderStringToSingleString(setHttpAuth.Username.Value),
-                                        Password = action.TranslatePlaceholderStringToSingleString(setHttpAuth.Password.Value),
+                                        Username = baseObject.TranslatePlaceholderStringToSingleString(setHttpAuth.Username.Value),
+                                        Password = baseObject.TranslatePlaceholderStringToSingleString(setHttpAuth.Password.Value),
                                     };
                                     _gateway.AddGatewayAction(setHttpAuthGw);
                                     while (!setHttpAuthGw.Completed)
@@ -306,7 +318,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     }
                                     if (setHttpAuthGw.Success)
                                     {
-                                        action.Successful = true;
+                                        baseObject.Successful = true;
                                         setHttpAuth.Successful = true;
                                         setHttpAuth.Completed = true;
                                         break;
@@ -318,7 +330,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 }
                             }
                             if (!failedOnce)
-                                action.Successful = true;
+                                baseObject.Successful = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(GetJsPrompt))
                         {
@@ -334,10 +346,10 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     {
                                         ExpectedDialogType = getPrompt.ExpectedDialogType.Value,
                                         ExpectedMessageText =
-                                            action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                            baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                 getPrompt.ExpectedMessageText),
                                         ExpectedDefaultPromptValue =
-                                            action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                            baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                 getPrompt.ExpectedDefaultPromptValue),
                                     };
                                     _gateway.AddGatewayAction(getPromptGw);
@@ -379,7 +391,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 }
                             }
                             if (!failedOnce)
-                                action.Successful = true;
+                                baseObject.Successful = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(SetJsPrompt))
                         {
@@ -395,14 +407,14 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     {
                                         ExpectedDialogType = setPrompt.ExpectedDialogType.Value,
                                         ExpectedMessageText =
-                                            action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                            baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                 setPrompt.ExpectedMessageText),
                                         ExpectedDefaultPromptValue =
-                                            action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                            baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                 setPrompt.ExpectedDefaultPromptValue),
                                         SetText = setPrompt.SetText.Value,
                                         SetSuccess = setPrompt.SetSuccess.Value,
-                                        Text = action.TranslatePlaceholderStringToSingleString(setPrompt.Text.Value),
+                                        Text = baseObject.TranslatePlaceholderStringToSingleString(setPrompt.Text.Value),
                                     };
                                     _gateway.AddGatewayAction(setPromptGw);
                                     while (!setPromptGw.Completed)
@@ -416,7 +428,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     }
                                     if (setPromptGw.Success)
                                     {
-                                        action.Successful = true;
+                                        baseObject.Successful = true;
                                         setPrompt.Successful = true;
                                         setPrompt.Completed = true;
                                         break;
@@ -428,7 +440,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 }
                             }
                             if (!failedOnce)
-                                action.Successful = true;
+                                baseObject.Successful = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(GetFrameNames))
                             //TODO Create isMain Frame Method
@@ -463,7 +475,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 }
                                 frame.Successful = true;
                                 frame.Completed = true;
-                                action.Successful = true;
+                                baseObject.Successful = true;
                             }
                         }
                         else if (action.ActionObject.GetType() == typeof(ElementToLoad))
@@ -489,9 +501,9 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
                                         EvaluateJavascript()
                                         {
-                                            Script = action.TranslatePlaceholderStringToSingleString(testString),
+                                            Script = baseObject.TranslatePlaceholderStringToSingleString(testString),
                                             FrameName =
-                                                action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                                baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                     action.ActionFrameName),
                                             Timeout = element.Timeout,
                                         };
@@ -513,7 +525,19 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                             {
                                                 var foundInThis = Convert.ToBoolean(response);
                                                 if (!foundInThis)
+                                                {
+                                                    if (element.Selector.ExpectedNumberOfElements.Value == 0)
+                                                    {
+                                                        element.ReturnedOutput.Add(
+                                                        new KeyValuePairEx<string, string>(
+                                                            ElementToLoad.KeyList.NumberOfFoundElements.ToString(),
+                                                            "0"));
+                                                        element.Successful = true;
+                                                        element.Completed = true;
+                                                    }
+                                                    else
                                                     found = false;
+                                                }
                                                 else
                                                 {
                                                     KeyValuePairEx<int, string> numberOfElements =
@@ -548,7 +572,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                             }
                             if (found)
                             {
-                                action.Successful = true;
+                                baseObject.Successful = true;
                             }
                         }
                         else if (action.ActionObject.GetType() == typeof(ResourceToLoad))
@@ -571,10 +595,10 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         ResourceLoaded()
                                         {
                                             ResourceUrl =
-                                                action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                                baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                     resource.ExpectedResourceUrl),
                                             FrameName =
-                                                action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                                baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                     resource.ExpectedFrameName),
                                         };
                                     _gateway.AddGatewayAction(resourceLoaded);
@@ -603,13 +627,16 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     }
                                 }
                             }
-                            action.Successful = true;
+                            baseObject.Successful = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(SecondsToWait))
                         {
-                            var secondsToSleep = (int) action.ActionObject;
+                            SecondsToWait secondsToWait = (SecondsToWait) action.ActionObject;
+                            var secondsToSleep = Convert.ToInt32(secondsToWait.Seconds.Value);
                             Thread.Sleep(secondsToSleep * 1000);
-                            action.Successful = true;
+                            baseObject.Successful = true;
+                            secondsToWait.Successful = true;
+                            secondsToWait.Completed = true;
                         }
                         else if (action.ActionObject.GetType() == typeof(SiteLoaded))
                             //https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded
@@ -643,14 +670,14 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 if (siteLoadedAction.Success && siteLoadedAction.Address != null)
                                 {
                                     siteLoaded.ExpectedSiteToLoad =
-                                        action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                        baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                             siteLoaded.ExpectedSiteToLoad);
                                     if (siteLoaded.ExpectedSiteToLoad != null)
                                         if (siteLoaded.ExpectedSiteToLoad.IsRegex.Value
                                             ? !Regex.IsMatch(siteLoadedAction.Address,
                                                 siteLoaded.ExpectedSiteToLoad.Value.Value)
                                             : siteLoaded.ExpectedSiteToLoad.Value.Value != siteLoadedAction.Address)
-                                            action.Successful = false;
+                                            siteLoaded.Successful = false;
                                         else
                                         {
                                             siteLoaded.SiteLoadedUrl = siteLoadedAction.Address;
@@ -658,7 +685,6 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                 new KeyValuePairEx<string, string>(
                                                     SiteLoaded.KeyList.SiteLoadedUrl.ToString(),
                                                     siteLoadedAction.Address));
-                                            action.Successful = true;
                                             siteLoaded.Successful = true;
                                             siteLoaded.Completed = true;
                                             break;
@@ -679,7 +705,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     GatewayAction.FrameLoaded frameLoaded = new GatewayAction.FrameLoaded()
                                     {
                                         FrameName =
-                                            action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                            baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                 frame.ExpectedFrameName),
                                         Timeout = frame.Timeout,
                                     };
@@ -700,7 +726,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     }
                                 }
                                 frame.Completed = true;
-                                action.Successful = true;
+                                frame.Successful = true;
                             }
                         }
                         else if (action.ActionObject.GetType() == typeof(HasStyleSetTo) ||
@@ -732,7 +758,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                             ? ".getAttribute('" +
                                                               element.AttributeName.Value + "')"
                                                             : ".style" + element.AttributeName.Value);
-                                        script = action.TranslatePlaceholderStringToSingleString(script);
+                                        script = baseObject.TranslatePlaceholderStringToSingleString(script);
                                         GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
                                             EvaluateJavascript()
                                             {
@@ -756,7 +782,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                             if (evaluateJavascript.Response.Result != null)
                                             {
                                                 element.ExpectedValue =
-                                                    action.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
+                                                    baseObject.TranslatePlaceholderStringOrRegexToSingleStringOrRegex(
                                                         element.ExpectedValue);
                                                 if (element.ExpectedValue.IsRegex.Value
                                                     ? Regex.IsMatch(evaluateJavascript.Response.Result.ToString(),
@@ -777,11 +803,13 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     if (numberOfElements.Key == 0)
                                         found = false;
                                 }
-                                action.Successful = found;
+                                element.Successful = found;
                             }
                         }
-                        else if (action.ActionObject.GetType() == typeof(InvokeSubmit) ||
-                                 action.ActionObject.GetType() == typeof(JavascriptToExecute))
+                        else if (action.ActionObject.GetType() == typeof(GetInnerHtml) ||
+                                action.ActionObject.GetType() == typeof(GetInnerText) ||
+                                action.ActionObject.GetType() == typeof(InvokeSubmit) ||
+                                action.ActionObject.GetType() == typeof(JavascriptToExecute))
                         {
                             var js = WebBrowserEx.ConvertObjectToObjectList(action.ActionObject);
 
@@ -790,9 +818,9 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 var element = (JavascriptToExecute) preElement;
                                 element.Javascript =
                                     new InsecureText(
-                                        action.TranslatePlaceholderStringToSingleString(element.Javascript.Value));
+                                        baseObject.TranslatePlaceholderStringToSingleString(element.Javascript.Value));
                                 element.Selector.SelectorString =
-                                    action.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
+                                    baseObject.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
                                 bool brokeTimeout = false;
                                 while (!brokeTimeout)
                                 {
@@ -846,8 +874,13 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                     new KeyValuePairEx<string, string>(
                                                         JavascriptToExecute.KeyList.ExecutionResult.ToString(),
                                                         evaluateJavascript.Response.Result.ToString()));
+                                                element.ReturnedOutput.Add(
+                                                    new KeyValuePairEx<string, string>(
+                                                        JavascriptToExecute.KeyList.ExecutedJavascript.ToString(),
+                                                        script));
                                                 element.Successful = evaluateJavascript.Response.Success;
                                                 element.Completed = true;
+                                                element.ExecutedJavascript = script;
                                             }
                                             else
                                             {
@@ -862,8 +895,14 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                     new KeyValuePairEx<string, string>(
                                                         JavascriptToExecute.KeyList.ExecutionResult.ToString(),
                                                         evaluateJavascript.Response.Result.ToString()));
+                                                newElement.ReturnedOutput.Add(
+                                                   new KeyValuePairEx<string, string>(
+                                                       JavascriptToExecute.KeyList.ExecutedJavascript.ToString(),
+                                                       script));
                                                 newElement.Successful = evaluateJavascript.Response.Success;
                                                 newElement.Completed = true;
+                                                newElement.ExecutedJavascript = script;
+
                                                 element.SetNextJavascriptToExecute(newElement);
                                             }
                                             var text = script + Environment.NewLine + Environment.NewLine +
@@ -872,13 +911,13 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                                            ? "Success: "
                                                            : "Failure: ") + evaluateJavascript.Response.Result +
                                                        evaluateJavascript.Response.Message;
-                                            action.Successful = evaluateJavascript.Response.Success;
+                                            element.Successful = evaluateJavascript.Response.Success;
                                         }
                                     }
                                     else
                                     {
                                         //Not Executing because Number of found js elements do not match!
-                                        action.Successful = false;
+                                        element.Successful = false;
                                     }
                                     break;
                                 }
@@ -893,7 +932,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                             {
                                 var element = (ReturnNode) preElement;
                                 element.Selector.SelectorString =
-                                    action.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
+                                    baseObject.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
                                 bool brokeTimeout = false;
                                 while (!brokeTimeout)
                                 {
@@ -965,10 +1004,10 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     break;
                                 }
                             }
-                            action.Successful = success;
                         }
                         else if (action.ActionObject.GetType() == typeof(SetStyle) ||
-                                 action.ActionObject.GetType() == typeof(SetAttribute))
+                                 action.ActionObject.GetType() == typeof(SetAttribute) ||
+                                 action.ActionObject.GetType() == typeof(SetValue))
                         {
                             List<object> objects = WebBrowserEx.ConvertObjectToObjectList(action.ActionObject);
                             bool success = true;
@@ -982,10 +1021,10 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     SetAttribute element = (SetAttribute) o;
                                     element.AttributeName =
                                         new InsecureText(
-                                            action.TranslatePlaceholderStringToSingleString(element.AttributeName.Value));
+                                            baseObject.TranslatePlaceholderStringToSingleString(element.AttributeName.Value));
                                     element.ValueToSet = new InsecureText(
-                                        action.TranslatePlaceholderStringToSingleString(element.ValueToSet.Value));
-                                    element.ValueToSet.Value = element.ValueToSet.Value.Replace(@"\", @"\\").Replace(@"'", @"\'");
+                                        baseObject.TranslatePlaceholderStringToSingleString(element.ValueToSet.Value));
+                                    element.ValueToSet.Value = EscapeJavascript(element.ValueToSet.Value);
                                     if (ShouldBreakDueToTimeout(element))
                                     {
                                         brokeTimeout = true;
@@ -995,15 +1034,31 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         FindElements(element.Selector, element.Timeout);
                                     for (int i = 0; i < numberOfElements.Key; i++)
                                     {
-                                        string script = BuildExecuteOnSelector(element.Selector.SelectorString,
-                                                            element.Selector.SelectorExecuteActionOn, i + 1, true) +
-                                                        (action.ActionObject.GetType() ==
-                                                         typeof(SetAttribute)
-                                                            ? ".setAttribute('" + element.AttributeName.Value + "', '" +
-                                                              element.ValueToSet.Value +
-                                                              "')"
-                                                            : ".style" + element.AttributeName.Value + " = '" +
-                                                              element.ValueToSet.Value + "'");
+                                        string script = "";
+
+                                        if (action.ActionObject.GetType() == typeof(SetAttribute))
+                                        {
+                                            script = BuildExecuteOnSelector(element.Selector.SelectorString,
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".setAttribute('" + element.AttributeName.Value + "', '" +
+                                                element.ValueToSet.Value + "')";
+                                        }
+                                        else if (action.ActionObject.GetType() == typeof(SetStyle))
+                                        {
+                                            script = BuildExecuteOnSelector(element.Selector.SelectorString,
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".style." + element.AttributeName.Value + " = '" +
+                                                              element.ValueToSet.Value + "'";
+                                        }
+                                        else if (action.ActionObject.GetType() == typeof(SetValue))
+                                        {
+                                            script = BuildExecuteOnSelector(element.Selector.SelectorString,
+                                                    element.Selector.SelectorExecuteActionOn, i + 1, true) + ".value = '" +
+                                                              element.ValueToSet.Value + "'";
+                                        }
+                                        else
+                                        {
+                                            throw new Exception("Sorry no other type was defined here");
+                                        }
+
                                         GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
                                             EvaluateJavascript()
                                             {
@@ -1028,7 +1083,6 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     }
                                 }
                             }
-                            action.Successful = success;
                         }
                         else if (action.ActionObject.GetType() == typeof(GetStyle) ||
                                  action.ActionObject.GetType() == typeof(GetAttribute))
@@ -1039,9 +1093,9 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                 GetAttribute element = (GetAttribute) o;
                                 element.AttributeName =
                                     new InsecureText(
-                                        action.TranslatePlaceholderStringToSingleString(element.AttributeName.Value));
+                                        baseObject.TranslatePlaceholderStringToSingleString(element.AttributeName.Value));
                                 element.Selector.SelectorString =
-                                    action.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
+                                    baseObject.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
                                 bool found = false;
                                 bool brokeTimeout = false;
                                 while (!found && !brokeTimeout)
@@ -1061,11 +1115,11 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
 
                                         if (evaluateJavascript.Response.Success)
                                         {
-                                            element.Value = evaluateJavascript.Response.Message;
+                                            element.Value = evaluateJavascript.Response.Result.ToString();
                                             element.ReturnedOutput.Add(
                                                 new KeyValuePairEx<string, string>(
                                                     CefBrowserControl.BrowserActions.Elements.GetAttribute.KeyList
-                                                        .Value.ToString(), evaluateJavascript.Response.Message));
+                                                        .Value.ToString(), evaluateJavascript.Response.Result.ToString()));
                                             element.Successful = true;
                                         }
                                         else
@@ -1077,10 +1131,12 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                     if (numberOfElements.Key == 0)
                                         found = false;
                                 }
-                                action.Successful = found;
+                                element.Successful = found;
                             }
                         }
-                        else if (action.ActionObject.GetType() == typeof(InvokeMouseClick) ||
+                        else if (
+                                 action.ActionObject.GetType() == typeof(InvokeFullKeyboardEvent) || 
+                                 action.ActionObject.GetType() == typeof(InvokeMouseClick) ||
                                  action.ActionObject.GetType() == typeof(EventToTrigger))
                         {
                             bool success = true;
@@ -1089,9 +1145,9 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                             {
                                 EventToTrigger element = (EventToTrigger) o;
                                 element.EventScriptBlock = new InsecureText(
-                                    action.TranslatePlaceholderStringToSingleString(element.EventScriptBlock.Value));
+                                    baseObject.TranslatePlaceholderStringToSingleString(element.EventScriptBlock.Value));
                                 element.Selector.SelectorString =
-                                    action.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
+                                    baseObject.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
                                 bool found = false;
                                 bool brokeTimeout = false;
                                 while (!found && !brokeTimeout)
@@ -1106,42 +1162,100 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                                         element.Timeout);
                                     for (int i = 0; i < numberOfElements.Key; i++)
                                     {
-                                        string script = @"(function(){var event = " + element.EventScriptBlock.Value + @"
-        var cb = " + BuildExecuteOnSelector(element.Selector.SelectorString,
-                                                            element.Selector.SelectorExecuteActionOn, i + 1, true) +
-                                                        @";
-        var cancelled = ! cb.dispatchEvent(event);
-        if(cancelled)
-            return 'Got canceled';
-        else
-            return 'Success';
-        })();
-        ";
-                                        GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
-                                            EvaluateJavascript()
+                                        if (action.ActionObject.GetType() == typeof(InvokeFullKeyboardEvent))
+                                        {
+                                            InvokeFullKeyboardEvent fullEvent = (InvokeFullKeyboardEvent) o;
+
+                                            bool successDown, successPress, successUp;
+
+                                            string eventDown = @"new KeyboardEvent('keydown', {
+    key: '" + fullEvent.KeyCode.Value+@"'
+  });";
+                                            string scriptDown = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), eventDown);
+                                            GatewayAction.EvaluateJavascript evaluateJavascriptDown = new GatewayAction.
+                                                EvaluateJavascript()
                                             {
                                                 Timeout = element.Timeout,
-                                                Script = script,
+                                                Script = scriptDown,
                                                 FrameName = action.ActionFrameName,
                                             };
-                                        _gateway.AddGatewayAction(evaluateJavascript);
-                                        while (!evaluateJavascript.Completed)
-                                            Thread.Sleep(_threadSleepTime);
-                                        element.Successful = evaluateJavascript.Response.Success;
-                                        element.Result = evaluateJavascript.Response.Message;
-                                        element.ReturnedOutput.Add(
-                                            new KeyValuePairEx<string, string>(
-                                                EventToTrigger.KeyList.Result.ToString(),
-                                                evaluateJavascript.Response.Message));
-                                        if (success == true && evaluateJavascript.Response.Success == false)
-                                            success = false;
-                                        element.Completed = true;
+                                            _gateway.AddGatewayAction(evaluateJavascriptDown);
+                                            while (!evaluateJavascriptDown.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            successDown = evaluateJavascriptDown.Success;
+
+                                            string eventPress = @"new KeyboardEvent('keypress', {
+    key: '" + fullEvent.KeyCode.Value + @"'
+  });";
+                                            string scriptPress = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), eventPress);
+                                            GatewayAction.EvaluateJavascript evaluateJavascriptPress = new GatewayAction.
+                                                EvaluateJavascript()
+                                            {
+                                                Timeout = element.Timeout,
+                                                Script = scriptPress,
+                                                FrameName = action.ActionFrameName,
+                                            };
+                                            _gateway.AddGatewayAction(evaluateJavascriptPress);
+                                            while (!evaluateJavascriptPress.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            successPress = evaluateJavascriptPress.Success;
+
+                                            string eventUp = @"new KeyboardEvent('keyup', {
+    key: '" + fullEvent.KeyCode.Value + @"'
+  });";
+                                            string scriptUp = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), eventUp);
+                                            GatewayAction.EvaluateJavascript evaluateJavascriptUp = new GatewayAction.
+                                                EvaluateJavascript()
+                                            {
+                                                Timeout = element.Timeout,
+                                                Script = scriptUp,
+                                                FrameName = action.ActionFrameName,
+                                            };
+                                            _gateway.AddGatewayAction(evaluateJavascriptUp);
+                                            while (!evaluateJavascriptUp.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            successUp = evaluateJavascriptUp.Success;
+
+                                            string allScripts = scriptDown + scriptPress + scriptUp;
+
+                                            if (successDown && successUp && successPress)
+                                            {
+                                                fullEvent.Completed = true;
+                                                fullEvent.Successful = true;
+                                                element.Completed = true;
+                                                element.Successful = true;
+                                                success = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            string script = BuildEventScriptBlock(BuildExecuteOnSelector(element.Selector.SelectorString, element.Selector.SelectorExecuteActionOn, i + 1, true), element.EventScriptBlock.Value);
+
+                                            GatewayAction.EvaluateJavascript evaluateJavascript = new GatewayAction.
+                                                EvaluateJavascript()
+                                                {
+                                                    Timeout = element.Timeout,
+                                                    Script = script,
+                                                    FrameName = action.ActionFrameName,
+                                                };
+                                            _gateway.AddGatewayAction(evaluateJavascript);
+                                            while (!evaluateJavascript.Completed)
+                                                Thread.Sleep(_threadSleepTime);
+                                            element.Successful = evaluateJavascript.Response.Success;
+                                            element.Result = evaluateJavascript.Response.Message;
+                                            element.ReturnedOutput.Add(
+                                                new KeyValuePairEx<string, string>(
+                                                    EventToTrigger.KeyList.Result.ToString(),
+                                                    evaluateJavascript.Response.Message));
+                                            if (success == true && evaluateJavascript.Response.Success == false)
+                                                success = false;
+                                            element.Completed = true;
+                                        }
                                     }
                                     if (numberOfElements.Key == 0)
                                         found = false;
                                 }
                             }
-                            action.Successful = success;
                         }
                         else if (action.ActionObject.GetType() == typeof(TextToTypeIn))
                         {
@@ -1160,7 +1274,7 @@ return dataURL.replace(/^ data:image\/ (png | jpg); base64,/, '');})(); ";
                             {
                                 ElementToClickOn element = (ElementToClickOn) o;
                                 element.Selector.SelectorString =
-                                    action.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
+                                    baseObject.TranslatePlaceholderStringToSingleString(element.Selector.SelectorString);
                                 KeyValuePairEx<int, string> numberOfElements = FindElements(element.Selector,
                                     element.Timeout);
                                 for (int i = 0; i < numberOfElements.Key; i++)
@@ -1736,19 +1850,14 @@ context.fill();
 
                             #endregion
                         }
-                        else if (action.ActionObject.GetType() == typeof(SecondsToWait))
-                        {
-
-                        }
                     }
 
-                    foreach (var element in ((BaseObject) action.ActionObject).ReturnedOutput)
-                    {
-                        action.ReturnedOutput.Add(element);
-                    }
+                    //foreach (var element in ((BaseObject) action.ActionObject).ReturnedOutput)
+                    //{
+                    //    baseObject.ReturnedOutput.Add(element);
+                    //}
 
                     //Was prior after exitwritelock!
-                    action.SetFinished(true);
 
                     _actionListLockSlim.EnterWriteLock();
                     BrowserActionsCompleted.Enqueue(action);
@@ -1758,6 +1867,21 @@ context.fill();
                 #endregion
             }
         }
+
+        private static string BuildEventScriptBlock(string selectorString, string eventScriptBlock)
+        {
+            string returnValue = @"(function(){var event = " + eventScriptBlock + @"
+var cb = " + selectorString +@";
+var cancelled = ! cb.dispatchEvent(event);
+if(cancelled)
+    return 'Got canceled';
+else
+    return 'Success';
+})();
+";
+            return returnValue;
+        }
+
 
         private static string BuildExecuteOnSelector(string selectionString,
             CefBrowserControl.BrowserAction.ExecuteActionOn executeActionOn,
@@ -1787,9 +1911,9 @@ context.fill();
                     {
                         iterator += "result.iterateNext(); ";
                     }
-                    return
-                        $"(function(){{var result = document.evaluate(\"{selectionString}\", document, null, XPathResult.ANY_TYPE, null ); " +
+                    string script = $"(function(){{var result = document.evaluate('{EscapeJavascript(selectionString)}', document, null, XPathResult.ANY_TYPE, null ); " +
                         iterator + "return result.iterateNext();})()";
+                    return script;
                 }
             }
             throw new NoSelectionTypeSpecified("Please define a selection type");
@@ -1954,7 +2078,7 @@ context.fill();
                         ? "document.getElementById('" + selector.SelectorString + "') != null ? 1 : 0"
                         : selector.SelectorExecuteActionOn ==
                           CefBrowserControl.BrowserAction.ExecuteActionOn.Xpath
-                            ? "document.evaluate(\"count(" + selector.SelectorString +
+                            ? "document.evaluate(\"count(" + EscapeJavascript(selector.SelectorString) +
                               ")\", document, null, XPathResult.ANY_TYPE, null )['numberValue'];"
                             : BuildExecuteOnSelector(selector.SelectorString,
                                   selector.SelectorExecuteActionOn, 2) + ".length";
@@ -2005,14 +2129,8 @@ context.fill();
             if (selector.ExpectedNumberOfElements.Value == numberOfElements ||
                 selector.ExpectedNumberOfElements.Value == 0)
                 return new KeyValuePairEx<int, string>(numberOfElements,
-                    "There are " + numberOfElements +
-                    " of " + selector.SelectorString +
-                    " Elements ");
-            return new KeyValuePairEx<int, string>(numberOfElements, "There were " + numberOfElements +
-                                                                   " instead of the expected " +
-                                                                   selector.ExpectedNumberOfElements +
-                                                                   " of " +
-                                                                   selector.ExpectedNumberOfElements);
+                    numberOfElements.ToString() );
+            return new KeyValuePairEx<int, string>(numberOfElements, numberOfElements.ToString());
         }
 
     }

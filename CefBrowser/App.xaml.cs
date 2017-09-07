@@ -21,7 +21,6 @@ namespace CefBrowser
                 Debugger.Launch();
            
             var window = new WebBrowserEx();
-            window.Visibility = Options.WindowsNormallyVisible ? Visibility.Visible : Visibility.Hidden;
                 window.Show();
         }
 

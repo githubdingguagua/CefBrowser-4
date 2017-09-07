@@ -24,15 +24,12 @@ namespace CefBrowserControl.BrowserActions.Elements
             else
                 return;
             Description = "Click on an element in the DOM, do not use this function, as it does not work at the moment";
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("DoubleClick", DoubleClick),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
             };
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -44,6 +41,17 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "DoubleClick")
                     DoubleClick = (InsecureBool) inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("DoubleClick", DoubleClick),
+            };
         }
     }
 }

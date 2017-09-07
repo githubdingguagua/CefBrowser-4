@@ -218,6 +218,7 @@ namespace CefBrowser.Gateway
                         {
                             GatewayAction.GetHttpAuth getHttpAuth = (GatewayAction.GetHttpAuth)action;
                             bool success = false;
+                            HttpAuth removingAuth = null;
                             foreach (var handledHttpAuth in _webBrowser.RequestHandler.HandledHttpAuths)
                             {
                                 if (getHttpAuth.ExpectedHost.Value.Value == "" ||
@@ -250,11 +251,14 @@ namespace CefBrowser.Gateway
                                                         break;
                                                     }
                                                 }
+                                                removingAuth = handledHttpAuth;
                                             }
                                         }
                                     }
                                 }
                             }
+                            if(removingAuth != null)
+                                _webBrowser.RequestHandler.HandledHttpAuths.Remove(removingAuth);
                             getHttpAuth.Success = success;
                             getHttpAuth.Completed = true;
                         }
@@ -271,6 +275,7 @@ namespace CefBrowser.Gateway
                     {
                             GatewayAction.GetJsDialog jsAction = (GatewayAction.GetJsDialog)action;
                         bool success = false;
+                        JsDialog removingJsDialog = null;
                         foreach (var handledJsDialog in _webBrowser.JsDialogHandler.HandledJsDialogs)
                         {
                             if (jsAction.ExpectedDefaultPromptValue == null ||
@@ -299,10 +304,13 @@ namespace CefBrowser.Gateway
                                                     break;
                                                 }
                                             }
-                                        }
+                                        removingJsDialog = handledJsDialog;
+                                    }
                                 }
                             }
                         }
+                        if (removingJsDialog != null)
+                            _webBrowser.JsDialogHandler.HandledJsDialogs.Remove(removingJsDialog);
                         jsAction.Success = success;
                         jsAction.Completed = true;
                     }

@@ -46,16 +46,14 @@ namespace CefBrowserControl.BrowserActions.Elements
                 return;
             ReturnedOutputKeysList.Add(KeyList.SerializedNode.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector"
             };
             Description =
                 "Returns the full Node of an element in xml serialized format";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -65,6 +63,16 @@ namespace CefBrowserControl.BrowserActions.Elements
                 if (inputParameter.Key == "Selector")
                     Selector = (Selector)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+            };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace CefBrowserControl.BrowserActions.Elements
     [Serializable]
     public class SetHttpAuth : GetHttpAuth
     {
-        public InsecureBool Cancel = new InsecureBool(true);
+        public InsecureBool Cancel = new InsecureBool();
         public InsecureText Username = new InsecureText();
         public InsecureText Password = new InsecureText();
 
@@ -26,17 +26,9 @@ namespace CefBrowserControl.BrowserActions.Elements
             else
                 return;
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("ExpectedSchemaType", ExpectedSchemaType),
-                new KeyValuePairEx<string, object>("ExpectedHost", ExpectedHost),
-                new KeyValuePairEx<string, object>("ExpectedPort", ExpectedPort),
-                new KeyValuePairEx<string, object>("ExpectedRealm", ExpectedRealm),
-                new KeyValuePairEx<string, object>("Cancel", Cancel),
-                new KeyValuePairEx<string, object>("Username", Username),
-                new KeyValuePairEx<string, object>("Password", Password),
+            Cancel.Value = false;
 
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Cancel",
@@ -45,6 +37,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Instructs the browser to cancel an http auth or set username and password for it. This has to be done BEFORE the auth, otherwise it gets cancelled!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -66,6 +59,22 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "Password")
                     Password = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 7)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("ExpectedSchemaType", ExpectedSchemaType),
+                new KeyValuePairEx<string, object>("ExpectedHost", ExpectedHost),
+                new KeyValuePairEx<string, object>("ExpectedPort", ExpectedPort),
+                new KeyValuePairEx<string, object>("ExpectedRealm", ExpectedRealm),
+                new KeyValuePairEx<string, object>("Cancel", Cancel),
+                new KeyValuePairEx<string, object>("Username", Username),
+                new KeyValuePairEx<string, object>("Password", Password),
+            };
         }
     }
 

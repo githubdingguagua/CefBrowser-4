@@ -26,16 +26,14 @@ namespace CefBrowserControl.BrowserCommands
                 HaveRequirementsBeenSet = true;
             else
                 return;
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Visible", Visible),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Visible"
             };
             Description =
                 "Shows or hides the browser for the user";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -45,6 +43,16 @@ namespace CefBrowserControl.BrowserCommands
                 if (inputParameter.Key == "Visible")
                     Visible = (InsecureBool)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Visible", Visible),
+            };
         }
     }
 }

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CefBrowserControl.Resources;
 
 namespace CefBrowserControl.BrowserActions.Elements.EventTypes
 {
     [Serializable]
-    public class InvokeMouseClick : EventToTrigger
+    public class InvokeFullKeyboardEvent : EventToTrigger
     {
-        public InvokeMouseClick() : base()
+        public InsecureText KeyCode = new InsecureText();
+
+        public InvokeFullKeyboardEvent() : base()
         {
            
         }
@@ -27,6 +30,9 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
                             {
                                 case "Selector":
                                     Selector = (Selector) parameterSetKeyValuePairEx.Value;
+                                    break;
+                                case "KeyCode":
+                                    KeyCode.Value = ((InsecureText)parameterSetKeyValuePairEx.Value).Value;
                                     break;
                                 default:
                                     ExceptionHandling.Handling.GetException("Unexpected",
@@ -50,14 +56,6 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
             }
         }
 
-        public new void SetAvailableInputParameters()
-        {
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-            };
-        }
-
         public new void NewInstance()
         {
             if (!HaveRequirementsBeenSet)
@@ -65,19 +63,26 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
             else
                 return;
             ReturnedOutputKeysList.Add(KeyList.Result.ToString());
-            EventScriptBlock.Value = @"new MouseEvent('click', {
-    'view': window,
-    'bubbles': true,
-    'cancelable': true
-  });";
+            EventScriptBlock.Value = "";
+            KeyCode.Value = "ArrowLeft";
             SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
+                "KeyCode",
             };
             Description =
-               @"Invoke mouse event from https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events directly on elements";
+               @"Invokes keydown keypress and keyup event of the given keyboard code of https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values like ArrowLeft, ArrowRight etc. or a, test this on https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code";
             TimeoutInSec = Options.DefaultTimeoutSeconds;
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("KeyCode", KeyCode),
+            };
         }
 
         public new void ReadAvailableInputParameters()
@@ -86,9 +91,12 @@ namespace CefBrowserControl.BrowserActions.Elements.EventTypes
             {
                 if (inputParameter.Key == "Selector")
                     Selector = (Selector)inputParameter.Value;
+                if (inputParameter.Key == "KeyCode")
+                    KeyCode.Value = ((InsecureText)inputParameter.Value).Value;
             }
-            if (InputParameterAvailable.Count != 1)
+            if (InputParameterAvailable.Count != 2)
                 NewInstance();
         }
+
     }
 }

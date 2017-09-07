@@ -26,7 +26,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             
         }
 
-        public void NewInstance()
+        public new void NewInstance()
         {
             if (!HaveRequirementsBeenSet)
                 HaveRequirementsBeenSet = true;
@@ -34,11 +34,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 return;
             ReturnedOutputKeysList.Add(KeyList.Result.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("EventScriptBlock", EventScriptBlock),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -46,6 +42,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Invoke Events from https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -54,9 +51,20 @@ namespace CefBrowserControl.BrowserActions.Elements
             {
                 if (inputParameter.Key == "Selector")
                     Selector = (Selector)inputParameter.Value;
-                else if (inputParameter.Key == "DoubleClick")
+                else if (inputParameter.Key == "EventScriptBlock")
                     EventScriptBlock = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("EventScriptBlock", EventScriptBlock),
+            };
         }
     }
 }

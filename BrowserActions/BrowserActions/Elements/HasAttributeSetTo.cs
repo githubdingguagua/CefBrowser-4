@@ -26,12 +26,7 @@ namespace CefBrowserControl.BrowserActions.Elements
                 HaveRequirementsBeenSet = true;
             else
                 return;
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("AttributeName", AttributeName),
-                new KeyValuePairEx<string, object>("ExpectedValue", ExpectedValue),
-            };
+            SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -40,6 +35,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Checks if one or more elements have set the value to the specified expected value. If that is the case, this object will set successfull to true!";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -53,6 +49,17 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "ExpectedValue")
                     ExpectedValue = (StringOrRegex)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 3)
+                NewInstance();
+        }
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("AttributeName", AttributeName),
+                new KeyValuePairEx<string, object>("ExpectedValue", ExpectedValue),
+            };
         }
     }
 }

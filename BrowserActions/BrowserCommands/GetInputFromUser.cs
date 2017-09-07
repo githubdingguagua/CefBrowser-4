@@ -14,7 +14,9 @@ namespace CefBrowserControl.BrowserCommands
         //Only text and base64 encoded images
         public List<object> InsecureDisplayObjects = new List<object>();
 
-        public InsecureBool InputNeeded = new InsecureBool(true);
+        public InsecureBool InputNeeded = new InsecureBool();
+
+        public InsecureBool KeepInFront = new InsecureBool();
 
         public string UserInputResult;
 
@@ -36,11 +38,10 @@ namespace CefBrowserControl.BrowserCommands
                 return;
             ReturnedOutputKeysList.Add(KeyList.UserInputResult.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("InsecureDisplayObjects", InsecureDisplayObjects),
-                new KeyValuePairEx<string, object>("InputNeeded", InputNeeded),
-            };
+            InputNeeded.Value = true;
+            KeepInFront.Value = true;
+
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "InsecureDisplayObjects",
@@ -58,7 +59,21 @@ namespace CefBrowserControl.BrowserCommands
                     InsecureDisplayObjects = (List<object>) inputParameter.Value;
                 if (inputParameter.Key == "InputNeeded")
                     InputNeeded = (InsecureBool)inputParameter.Value;
+                if (inputParameter.Key == "KeepInFront")
+                    KeepInFront = (InsecureBool)inputParameter.Value;
+                if (InputParameterAvailable.Count != 3)
+                    NewInstance();
             }
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("InsecureDisplayObjects", InsecureDisplayObjects),
+                new KeyValuePairEx<string, object>("InputNeeded", InputNeeded),
+                new KeyValuePairEx<string, object>("KeepInFront", KeepInFront),
+            };
         }
     }
 }

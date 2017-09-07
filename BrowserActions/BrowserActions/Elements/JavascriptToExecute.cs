@@ -11,6 +11,7 @@ namespace CefBrowserControl.BrowserActions.Elements
     {
         public Selector Selector = new Selector();
         public InsecureText Javascript = new InsecureText();
+        public string ExecutedJavascript;
 
         public JavascriptToExecute NextJavascriptToExecute { get; set; }
 
@@ -24,6 +25,7 @@ namespace CefBrowserControl.BrowserActions.Elements
         public enum KeyList
         {
             ExecutionResult,
+            ExecutedJavascript,
         }
 
         public JavascriptToExecute()
@@ -38,12 +40,9 @@ namespace CefBrowserControl.BrowserActions.Elements
             else
                 return;
             ReturnedOutputKeysList.Add(KeyList.ExecutionResult.ToString());
+            ReturnedOutputKeysList.Add(KeyList.ExecutedJavascript.ToString());
 
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Selector", Selector),
-                new KeyValuePairEx<string, object>("Javascript", Javascript),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Selector",
@@ -51,6 +50,7 @@ namespace CefBrowserControl.BrowserActions.Elements
             };
             Description =
                 "Executes Javascript. If Selector is set, the javascript is tried to be executed on it";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -62,6 +62,17 @@ namespace CefBrowserControl.BrowserActions.Elements
                 else if (inputParameter.Key == "Javascript")
                     Javascript = (InsecureText)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 2)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Selector", Selector),
+                new KeyValuePairEx<string, object>("Javascript", Javascript),
+            };
         }
     }
 }

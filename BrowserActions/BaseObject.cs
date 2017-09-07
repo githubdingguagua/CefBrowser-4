@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using CefBrowserControl.BrowserActions.Helper;
 
 namespace CefBrowserControl
@@ -102,7 +103,6 @@ namespace CefBrowserControl
                 positionBeginning++;
             }
         }
-
         public bool ExecuteEventHandler { get; set; } = false;
 
         public void SetFinished(bool completed)
@@ -111,7 +111,7 @@ namespace CefBrowserControl
             if (ExecuteEventHandler)
                 OnActionFinished(new EventArgs());
         }
-
+        
         public event EventHandler ActionFinishedEventHandler;
 
         protected virtual void OnActionFinished(EventArgs e)
@@ -155,6 +155,11 @@ namespace CefBrowserControl
         }
 
         public  void ReadAvailableInputParameters()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetAvailableInputParameters()
         {
             throw new NotImplementedException();
         }

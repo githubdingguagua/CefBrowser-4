@@ -145,6 +145,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="GetInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WebBrowserEx.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -157,6 +161,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Gateway\GatewayAction.cs" />
+    <Compile Include="GetInput.xaml.cs">
+      <DependentUpon>GetInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Handler\BrowsingState.cs" />
     <Compile Include="Handler\DialogHandler.cs" />
     <Compile Include="Handler\DisplayHandler.cs" />

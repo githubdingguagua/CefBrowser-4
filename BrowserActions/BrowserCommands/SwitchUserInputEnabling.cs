@@ -26,16 +26,14 @@ namespace CefBrowserControl.BrowserCommands
                 HaveRequirementsBeenSet = true;
             else
                 return;
-            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
-            {
-                new KeyValuePairEx<string, object>("Enabled", Enabled),
-            };
+           SetAvailableInputParameters();
             InputParameterRequired = new List<string>()
             {
                 "Enabled"
             };
             Description =
                 "Let the user enable to use the mouse and keyboard in the browser";
+            TimeoutInSec = Options.DefaultTimeoutSeconds;
         }
 
         public new void ReadAvailableInputParameters()
@@ -45,6 +43,16 @@ namespace CefBrowserControl.BrowserCommands
                 if (inputParameter.Key == "Enabled")
                     Enabled = (InsecureBool)inputParameter.Value;
             }
+            if (InputParameterAvailable.Count != 1)
+                NewInstance();
+        }
+
+        public new void SetAvailableInputParameters()
+        {
+            InputParameterAvailable = new List<KeyValuePairEx<string, object>>()
+            {
+                new KeyValuePairEx<string, object>("Enabled", Enabled),
+            };
         }
     }
 }
